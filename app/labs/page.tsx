@@ -1,6 +1,6 @@
 export default function Labs() {
   return (
-    <main className="mx-auto flex w-full max-w-3xl flex-1 flex-col gap-6 px-6 py-16">
+    <main className="site-container flex flex-1 flex-col gap-6 py-16">
       <h1 className="text-4xl font-semibold tracking-tight">Labs</h1>
       <p className="text-lg leading-8 text-zinc-600 dark:text-zinc-400">
         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod

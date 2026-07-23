@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Averia_Serif_Libre, Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 
+import Header from "@/components/Header";
 import IntroLoader from "@/components/IntroLoader";
 
 const averiaSerifLibre = Averia_Serif_Libre({
@@ -35,8 +36,9 @@ export default function RootLayout({
       lang="en"
       className={`${averiaSerifLibre.variable} ${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">
+      <body className="relative flex min-h-full flex-col font-sans">
         <IntroLoader />
+        <Header />
         {children}
       </body>
     </html>
