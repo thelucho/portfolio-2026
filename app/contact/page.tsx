@@ -1,7 +1,7 @@
-export default function Home() {
+export default function Contact() {
   return (
     <main className="mx-auto flex w-full max-w-3xl flex-1 flex-col gap-6 px-6 py-16">
-      <h1 className="text-4xl font-semibold tracking-tight">Home</h1>
+      <h1 className="text-4xl font-semibold tracking-tight">Contact</h1>
       <p className="text-lg leading-8 text-zinc-600 dark:text-zinc-400">
         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod
         tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
