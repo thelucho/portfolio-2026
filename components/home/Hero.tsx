@@ -1,8 +1,9 @@
 'use client'
 
 import { useLayoutEffect, useRef } from 'react'
+import Image from 'next/image'
 import gsap from 'gsap'
-import { onIntroComplete } from '@/lib/intro'
+import { HERO_INTRO_DELAY, onIntroComplete } from '@/lib/intro'
 
 export default function Hero() {
   const sectionRef = useRef<HTMLElement>(null)
@@ -23,6 +24,7 @@ export default function Hero() {
 
     const unsubscribe = onIntroComplete(() => {
       tl = gsap.timeline({
+        delay: HERO_INTRO_DELAY,
         defaults: { ease: 'expo.out' },
       })
 
@@ -48,20 +50,34 @@ export default function Hero() {
       ref={sectionRef}
       className="relative flex h-dvh w-full items-center justify-center overflow-hidden bg-[radial-gradient(circle,_#516B4C_0%,_#2B4625_100%)]"
     >
+      <Image
+        src="/images/hero/hero-background-shape.png"
+        alt=""
+        width={2200}
+        height={1560}
+        priority
+        aria-hidden
+        className="pointer-events-none absolute top-0 left-0 z-0 h-auto w-auto max-w-none select-none"
+      />
       <h1
         ref={titleRef}
-        className="w-[977px] font-serif text-[130px] font-normal uppercase leading-[91%] tracking-[-3px] text-white"
+        className="relative z-10 w-[977px] font-serif text-[130px] font-normal uppercase leading-[91%] tracking-[-3px] text-white"
       >
         <span className="block pl-[88px]">
           <span data-hero-el className="inline-block">
             I
           </span>{' '}
-          <span
-            data-hero-el
-            className="mx-3 inline-block size-[0.7em] overflow-hidden align-middle"
-            aria-hidden
-          >
-            <span className="block size-full bg-white/15" />
+          <span data-hero-el className="mx-3 inline-block align-middle">
+            <span className="block h-[88px] w-[161px] -translate-x-[12px] -translate-y-[12px] overflow-hidden rounded-[50px]">
+              <Image
+                src="/images/hero/hero-img-heading-01.jpg"
+                alt=""
+                width={161}
+                height={88}
+                aria-hidden
+                className="h-full w-full object-cover"
+              />
+            </span>
           </span>
           <span data-hero-el className="inline-block">
             don&apos;t
@@ -72,12 +88,17 @@ export default function Hero() {
           <span data-hero-el className="inline-block">
             promise
           </span>{' '}
-          <span
-            data-hero-el
-            className="mx-3 inline-block size-[0.7em] overflow-hidden align-middle"
-            aria-hidden
-          >
-            <span className="block size-full bg-white/15" />
+          <span data-hero-el className="mx-3 inline-block align-middle">
+            <span className="block h-[88px] w-[161px] -translate-x-[12px] -translate-y-[12px] overflow-hidden rounded-[50px]">
+              <Image
+                src="/images/hero/hero-img-heading-02.jpg"
+                alt=""
+                width={161}
+                height={88}
+                aria-hidden
+                className="h-full w-full object-cover"
+              />
+            </span>
           </span>
         </span>
 

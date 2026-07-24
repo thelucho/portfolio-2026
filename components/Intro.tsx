@@ -36,8 +36,6 @@ export default function Intro() {
 
         const tl = gsap.timeline({
             onComplete: () => {
-                document.body.style.overflow = ''
-                signalIntroComplete()
                 setDone(true)
             }
         })
@@ -81,6 +79,10 @@ export default function Intro() {
                 backdropFilter: 'blur(24px)',
                 duration: 1,
                 ease: 'power2.inOut',
+                onStart: () => {
+                    document.body.style.overflow = ''
+                    signalIntroComplete()
+                },
             },
             '-=0.2'
         )
