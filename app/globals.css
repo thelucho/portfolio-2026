@@ -1,10 +1,10 @@
 @import "tailwindcss";
 
 :root {
-  --background: #0f3521;
+  --background: #2B4625;
   --foreground: #ededed;
   --palette-white: #ffffff;
-  --palette-forest: #0f3521;
+  --palette-forest: #2B4625;
   --container-max: 1180px;
   --container-px: 1.5rem;
 }

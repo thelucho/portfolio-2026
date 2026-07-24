@@ -3,6 +3,7 @@
 import { useLayoutEffect, useRef, useState } from 'react'
 import gsap from 'gsap'
 import { SplitText } from 'gsap/SplitText'
+import { signalIntroComplete } from '@/lib/intro'
 
 gsap.registerPlugin(SplitText)
 
@@ -36,6 +37,7 @@ export default function Intro() {
         const tl = gsap.timeline({
             onComplete: () => {
                 document.body.style.overflow = ''
+                signalIntroComplete()
                 setDone(true)
             }
         })
@@ -97,7 +99,7 @@ export default function Intro() {
         <div ref={containerRef} className="fixed inset-0 z-[9999] pointer-events-none">
           <div
             ref={panelRef}
-            className="absolute inset-0 bg-emerald-950 will-change-[opacity,filter]"
+            className="absolute inset-0 bg-[#2B4625] will-change-[opacity,filter]"
           />
 
           <div
