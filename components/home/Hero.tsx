@@ -3,7 +3,13 @@
 import { useLayoutEffect, useRef } from 'react'
 import Image from 'next/image'
 import gsap from 'gsap'
+import { CustomEase } from 'gsap/CustomEase'
 import { HERO_INTRO_DELAY, onIntroComplete } from '@/lib/intro'
+
+gsap.registerPlugin(CustomEase)
+
+const maskEase = CustomEase.create('maskReveal', '0.77,0,0.175,1')
+const labelEase = CustomEase.create('labelReveal', '0.86,0,0.07,1')
 
 type MaskReveal = {
   mask: HTMLElement
@@ -13,12 +19,6 @@ type MaskReveal = {
   marginRight: number
   paddingLeft: number
   delta: number
-}
-
-/** Soft start, even softer finish — asymmetric smootherstep. */
-function maskEase(t: number) {
-  const smoothed = t * t * t * (t * (t * 6 - 15) + 10)
-  return 1 - Math.pow(1 - smoothed, 1.45)
 }
 
 export default function Hero() {
@@ -126,53 +126,52 @@ export default function Hero() {
         clearProps: 'filter',
       })
 
-      tl.to(
-        sinceLabel,
-        {
-          clipPath: 'inset(0 0% 0 0)',
-          duration: 0.9,
-          ease: 'power3.inOut',
-        },
-        '>-0.8',
-      )
-
-      tl.to(
-        creativeLabel,
-        {
-          clipPath: 'inset(0 0% 0 0)',
-          duration: 0.9,
-          ease: 'power3.inOut',
-        },
-        '>-0.6',
-      )
-
-      
-
-      ;[...reveals].reverse().forEach(({ mask, line, width, marginLeft, marginRight, paddingLeft }, i) => {
+      reveals.forEach(({ mask, line, width, marginLeft, marginRight, paddingLeft }, i) => {
         tl!.to(
           mask,
           {
             width,
             marginLeft,
             marginRight,
-            duration: 1.4,
+            duration: 1.1,
             ease: maskEase,
             clearProps: 'width,marginLeft,marginRight',
           },
-          i === 0 ? '>-0.5' : '<0.3',
+          i === 0 ? '>-0.8' : '<',
         )
 
         tl!.to(
           line,
           {
             paddingLeft,
-            duration: 1.4,
+            duration: 1.1,
             ease: maskEase,
             clearProps: 'paddingLeft',
           },
           '<',
         )
       })
+
+      tl.to(
+        creativeLabel,
+        {
+          clipPath: 'inset(0 0% 0 0)',
+          duration: 0.9,
+          ease: labelEase,
+        },
+        '>-=0.3',
+      )
+
+      tl.to(
+        sinceLabel,
+        {
+          clipPath: 'inset(0 0% 0 0)',
+          duration: 0.9,
+          ease: labelEase,
+        },
+        '<0.4',
+      )
+
     })
 
     return () => {

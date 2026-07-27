@@ -7,7 +7,7 @@ export const INTRO_COMPLETE_EVENT = 'intro:complete'
  * - 0.5 → halfway through the panel fade
  * - 1   → after the panel is fully gone
  */
-export const HERO_INTRO_DELAY = 0.3
+export const HERO_INTRO_DELAY = 0.6
 
 let introHasCompleted = false
 
