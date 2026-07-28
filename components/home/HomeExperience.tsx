@@ -6,14 +6,17 @@ import { useGSAP } from '@gsap/react'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import Hero from '@/components/home/Hero'
 import Manifesto from '@/components/home/Manifesto'
+import FeaturedWorks from '@/components/home/FeaturedWorks'
 
 gsap.registerPlugin(ScrollTrigger, useGSAP)
 
 export default function HomeExperience() {
+  const rootRef = useRef<HTMLDivElement>(null)
   const stageRef = useRef<HTMLDivElement>(null)
   const heroLayerRef = useRef<HTMLDivElement>(null)
   const creamRef = useRef<HTMLDivElement>(null)
   const manifestoRef = useRef<HTMLDivElement>(null)
+  const worksRef = useRef<HTMLElement>(null)
 
   useGSAP(
     () => {
@@ -21,7 +24,8 @@ export default function HomeExperience() {
       const heroLayer = heroLayerRef.current
       const cream = creamRef.current
       const manifesto = manifestoRef.current
-      if (!stage || !heroLayer || !cream || !manifesto) return
+      const works = worksRef.current
+      if (!stage || !heroLayer || !cream || !manifesto || !works) return
 
       const words = gsap.utils.toArray<HTMLElement>(manifesto.querySelectorAll('[data-word]'))
       const mm = gsap.matchMedia()
@@ -44,7 +48,7 @@ export default function HomeExperience() {
 
       mm.add('(prefers-reduced-motion: no-preference)', () => {
         gsap.set(cream, { opacity: 0 })
-        gsap.set(manifesto, { autoAlpha: 0 })
+        gsap.set(manifesto, { autoAlpha: 0, y: 0 })
         gsap.set(words, { opacity: 0.2 })
         gsap.set(heroLayer, { autoAlpha: 1, y: 0, scale: 1 })
 
@@ -52,7 +56,8 @@ export default function HomeExperience() {
           scrollTrigger: {
             trigger: stage,
             start: 'top top',
-            end: '+=320%',
+            // Shorter pin: ends once the manifesto is fully painted — no empty cream beat.
+            end: '+=280%',
             pin: true,
             scrub: 0.7,
             anticipatePin: 1,
@@ -113,6 +118,31 @@ export default function HomeExperience() {
           },
           1.9,
         )
+
+        // Brief hold, then release the pin while the manifesto is still visible.
+        tl.to({}, { duration: 0.3 })
+
+        // Manifesto dissolve vs Featured Works.
+        // Tune with start/end: larger gap between the two % = slower fade.
+        //   start — when fade begins (works top hits this viewport line)
+        //   end   — when fade finishes (lower % = stays visible longer)
+        gsap.fromTo(
+          manifesto,
+          { autoAlpha: 1, y: 0 },
+          {
+            autoAlpha: 0,
+            y: -36,
+            ease: 'none',
+            immediateRender: false,
+            scrollTrigger: {
+              trigger: works,
+              start: 'top 95%',
+              end: 'top 50%',
+              scrub: 0.4,
+              invalidateOnRefresh: true,
+            },
+          },
+        )
       })
 
       return () => {
@@ -120,12 +150,12 @@ export default function HomeExperience() {
         document.documentElement.removeAttribute('data-header-theme')
       }
     },
-    { scope: stageRef },
+    { scope: rootRef },
   )
 
   return (
-    <div className="relative w-full overflow-x-clip">
-      <div ref={stageRef} className="relative h-dvh w-full overflow-hidden">
+    <div ref={rootRef} className="relative w-full overflow-x-clip">
+      <div ref={stageRef} className="relative z-10 h-dvh w-full overflow-hidden">
         <div
           aria-hidden
           className="absolute inset-0 bg-[radial-gradient(circle,_#516B4C_0%,_#2B4625_100%)]"
@@ -138,16 +168,19 @@ export default function HomeExperience() {
         <div
           ref={creamRef}
           aria-hidden
-          className="pointer-events-none absolute inset-0 z-20 bg-[#FDFDEA] will-change-[opacity]"
+          className="pointer-events-none absolute inset-0 z-20 will-change-[opacity]"
+          style={{ backgroundColor: '#FDFDEA' }}
         />
 
         <div
           ref={manifestoRef}
-          className="absolute inset-0 z-30 flex items-center justify-center will-change-[opacity]"
+          className="absolute inset-0 z-30 flex items-center justify-center will-change-[opacity,transform]"
         >
           <Manifesto />
         </div>
       </div>
+
+      <FeaturedWorks ref={worksRef} />
     </div>
   )
 }

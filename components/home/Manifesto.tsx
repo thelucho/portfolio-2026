@@ -8,7 +8,7 @@ const WORDS = PHRASE.split(' ')
 export default function Manifesto() {
   return (
     <p
-      className="max-w-[min(940px,calc(100vw-3rem))] px-6 text-center font-serif text-[clamp(1.75rem,4.2vw,3.35rem)] font-normal leading-[1.28] tracking-[-0.03em] text-[#2B4625] md:px-10"
+      className="max-w-[min(1100px,calc(100vw-3rem))] px-6 text-center font-serif text-[clamp(1.75rem,4.2vw,4.5rem)] font-normal leading-[1.28] tracking-[-0.03em] text-[#2B4625] md:px-10"
       aria-label="Manifesto"
     >
       {WORDS.map((word, index) => (
