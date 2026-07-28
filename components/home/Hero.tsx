@@ -333,7 +333,7 @@ export default function Hero() {
   return (
     <section
       ref={sectionRef}
-      className="relative flex h-dvh w-full items-center justify-center overflow-hidden bg-[radial-gradient(circle,_#516B4C_0%,_#2B4625_100%)]"
+      className="relative flex h-full w-full items-center justify-center overflow-hidden"
     >
       <Image
         src="/images/hero/hero-background-shape.png"

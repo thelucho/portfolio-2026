@@ -14,7 +14,7 @@ export default function LocationClock() {
   }, [])
 
   return (
-    <div className="flex flex-col items-end text-right text-sm leading-snug text-white">
+    <div className="flex flex-col items-end text-right text-sm leading-snug text-[var(--header-fg)] transition-colors duration-500 ease-out">
       <p>
         <span className="font-light">Based in </span>
         <span className="font-medium">Argentina</span>

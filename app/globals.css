@@ -5,8 +5,18 @@
   --foreground: #ededed;
   --palette-white: #ffffff;
   --palette-forest: #2B4625;
+  --palette-cream: #fdfdea;
+  --header-fg: #ffffff;
+  --header-rule: rgb(255 255 255 / 0.2);
   --container-max: 1180px;
   --container-px: 1.5rem;
+}
+
+html[data-header-theme='light'] {
+  --header-fg: #2b4625;
+  --header-rule: rgb(43 70 37 / 0.22);
+  --background: #fdfdea;
+  --foreground: #2b4625;
 }
 
 @theme inline {
@@ -35,6 +45,31 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-geist-sans), system-ui, sans-serif;
+  transition:
+    background-color 0.55s ease,
+    color 0.55s ease;
+  overflow-x: clip;
+}
+
+html {
+  overflow-x: clip;
+}
+
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+  overflow: clip;
 }
 
 @media (pointer: fine) {

@@ -5,6 +5,7 @@ import "./globals.css";
 import CustomCursor from "@/components/CustomCursor";
 import Header from "@/components/Header";
 import IntroLoader from "@/components/IntroLoader";
+import SmoothScroll from "@/components/SmoothScroll";
 
 const averiaSerifLibre = Averia_Serif_Libre({
   variable: "--font-averia-serif-libre",
@@ -37,11 +38,13 @@ export default function RootLayout({
       lang="en"
       className={`${averiaSerifLibre.variable} ${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="relative flex min-h-full flex-col font-sans">
-        <CustomCursor />
-        <IntroLoader />
-        <Header />
-        {children}
+      <body className="relative flex min-h-full flex-col overflow-x-clip font-sans">
+        <SmoothScroll>
+          <CustomCursor />
+          <IntroLoader />
+          <Header />
+          {children}
+        </SmoothScroll>
       </body>
     </html>
   );
