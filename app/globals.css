@@ -6,6 +6,7 @@
   --palette-white: #ffffff;
   --palette-forest: #2B4625;
   --palette-cream: #fdfdea;
+  --palette-sage: #a7b987;
   --header-fg: #ffffff;
   --header-rule: rgb(255 255 255 / 0.2);
   --container-max: 1180px;
@@ -24,8 +25,9 @@ html[data-header-theme='light'] {
   --color-foreground: var(--foreground);
   --color-white: var(--palette-white);
   --color-forest: var(--palette-forest);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-sage: var(--palette-sage);
+  --font-sans: var(--font-manrope);
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
   --font-serif: var(--font-averia-serif-libre);
   --max-width-container: var(--container-max);
 }
@@ -44,7 +46,7 @@ html[data-header-theme='light'] {
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: var(--font-geist-sans), system-ui, sans-serif;
+  font-family: var(--font-manrope), system-ui, sans-serif;
   transition:
     background-color 0.55s ease,
     color 0.55s ease;
@@ -76,5 +78,109 @@ html.lenis body {
   html.has-custom-cursor,
   html.has-custom-cursor * {
     cursor: none !important;
+  }
+}
+
+/* View Case CTA — dual underline wipe with 5px gap, clipped by overflow mask */
+.view-case-link {
+  position: relative;
+  padding-bottom: 0.35em;
+}
+
+.view-case-underline {
+  position: absolute;
+  inset-inline: 0;
+  bottom: 0;
+  height: 2px;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.view-case-underline::before,
+.view-case-underline::after {
+  content: '';
+  position: absolute;
+  inset-block: 0;
+  left: 0;
+  width: 100%;
+  background-color: currentColor;
+  transition: transform 0.55s cubic-bezier(0.65, 0, 0.35, 1);
+  will-change: transform;
+}
+
+/* Idle: leading bar covers the full width */
+.view-case-underline::before {
+  transform: translateX(0);
+}
+
+/* Idle: trailing bar sits just left of the mask, with a 5px gap before ::before */
+.view-case-underline::after {
+  transform: translateX(calc(-100% - 5px));
+}
+
+/* Hover: both bars travel L→R; the 5px gap sweeps across the masked edge */
+.view-case-link:hover .view-case-underline::before {
+  transform: translateX(calc(100% + 5px));
+}
+
+.view-case-link:hover .view-case-underline::after {
+  transform: translateX(0);
+}
+
+.view-case-arrow {
+  position: relative;
+  display: inline-grid;
+  place-items: center;
+  overflow: hidden;
+  width: 1.15em;
+  height: 1.15em;
+}
+
+.view-case-arrow-icon {
+  grid-area: 1 / 1;
+  transition: transform 0.45s cubic-bezier(0.65, 0, 0.35, 1);
+  will-change: transform;
+}
+
+/* Idle: visible arrow sits in place */
+.view-case-arrow-icon:first-child {
+  transform: translate(0, 0);
+}
+
+/* Idle: replacement waits bottom-left, outside the mask */
+.view-case-arrow-icon:last-child {
+  transform: translate(-110%, 110%);
+}
+
+/* Hover: first exits up-right; second slides in from behind */
+.view-case-link:hover .view-case-arrow-icon:first-child {
+  transform: translate(110%, -110%);
+}
+
+.view-case-link:hover .view-case-arrow-icon:last-child {
+  transform: translate(0, 0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .view-case-underline::before,
+  .view-case-underline::after,
+  .view-case-arrow-icon {
+    transition: none;
+  }
+
+  .view-case-link:hover .view-case-underline::before {
+    transform: translateX(0);
+  }
+
+  .view-case-link:hover .view-case-underline::after {
+    transform: translateX(calc(-100% - 5px));
+  }
+
+  .view-case-link:hover .view-case-arrow-icon:first-child {
+    transform: translate(0, 0);
+  }
+
+  .view-case-link:hover .view-case-arrow-icon:last-child {
+    transform: translate(-110%, 110%);
   }
 }

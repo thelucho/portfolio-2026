@@ -28,6 +28,9 @@ export default function HomeExperience() {
       if (!stage || !heroLayer || !cream || !manifesto || !works) return
 
       const words = gsap.utils.toArray<HTMLElement>(manifesto.querySelectorAll('[data-word]'))
+      const leafStart = manifesto.querySelector<HTMLElement>('[data-leaf="start"]')
+      const leafEnd = manifesto.querySelector<HTMLElement>('[data-leaf="end"]')
+      const leaves = [leafStart, leafEnd].filter(Boolean)
       const mm = gsap.matchMedia()
 
       const setHeaderTheme = (light: boolean) => {
@@ -43,6 +46,7 @@ export default function HomeExperience() {
         gsap.set(cream, { opacity: 1 })
         gsap.set(words, { opacity: 1 })
         gsap.set(manifesto, { autoAlpha: 1 })
+        gsap.set(leaves, { opacity: 1 })
         setHeaderTheme(true)
       })
 
@@ -51,6 +55,7 @@ export default function HomeExperience() {
         gsap.set(manifesto, { autoAlpha: 0, y: 0 })
         gsap.set(words, { opacity: 0.2 })
         gsap.set(heroLayer, { autoAlpha: 1, y: 0, scale: 1 })
+        gsap.set(leaves, { opacity: 0.3 })
 
         const tl = gsap.timeline({
           scrollTrigger: {
@@ -118,6 +123,34 @@ export default function HomeExperience() {
           },
           1.9,
         )
+
+        // First leaf: 30% → 100% with the opening words.
+        if (leafStart) {
+          tl.to(
+            leafStart,
+            {
+              opacity: 1,
+              ease: 'none',
+              duration: 0.85,
+            },
+            1.9,
+          )
+        }
+
+        // Second leaf: 30% → 100% as the closing words paint in.
+        // Last word starts ~1.9 + (n-1)*0.12; land the fade on that final beat.
+        if (leafEnd) {
+          const lastWordStart = 1.9 + Math.max(0, words.length - 1) * 0.12
+          tl.to(
+            leafEnd,
+            {
+              opacity: 1,
+              ease: 'none',
+              duration: 0.7,
+            },
+            lastWordStart - 0.35,
+          )
+        }
 
         // Brief hold, then release the pin while the manifesto is still visible.
         tl.to({}, { duration: 0.3 })

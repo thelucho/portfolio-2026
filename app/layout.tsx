@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Averia_Serif_Libre, Geist, Geist_Mono } from "next/font/google";
+import { Averia_Serif_Libre, Manrope } from "next/font/google";
 import "./globals.css";
 
 import CustomCursor from "@/components/CustomCursor";
@@ -13,13 +13,8 @@ const averiaSerifLibre = Averia_Serif_Libre({
   weight: ["300", "400", "700"],
 });
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const manrope = Manrope({
+  variable: "--font-manrope",
   subsets: ["latin"],
 });
 
@@ -36,7 +31,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${averiaSerifLibre.variable} ${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${averiaSerifLibre.variable} ${manrope.variable} h-full antialiased`}
     >
       <body className="relative flex min-h-full flex-col overflow-x-clip font-sans">
         <SmoothScroll>

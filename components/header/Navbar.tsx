@@ -9,7 +9,7 @@ export default function Navbar() {
           <li key={item.href}>
             <Link
               href={item.href}
-              className="text-base font-light text-[var(--header-fg)] transition-[color,opacity] duration-500 ease-out hover:opacity-70"
+              className="font-sans text-base font-light text-[var(--header-fg)] transition-[color,opacity] duration-500 ease-out hover:opacity-70"
             >
               {item.label}
             </Link>

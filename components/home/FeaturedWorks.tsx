@@ -13,7 +13,6 @@ gsap.registerPlugin(ScrollTrigger, useGSAP)
 
 const MARQUEE_PHRASE = 'Featured Works — '
 const MARQUEE_COPIES = 8
-const ACCENT = '#B4E600'
 const CREAM = '#FDFDEA'
 
 type WorkRowProps = {
@@ -31,7 +30,7 @@ function WorkRow({ work, reverse }: WorkRowProps) {
     >
       <div
         data-work-media
-        className="relative aspect-square w-full overflow-hidden lg:w-[min(48%,560px)] lg:shrink-0"
+        className="relative aspect-square w-full overflow-hidden rounded-[2rem] lg:w-[min(48%,560px)] lg:shrink-0"
       >
         <Image
           src={work.image}
@@ -93,13 +92,14 @@ function WorkRow({ work, reverse }: WorkRowProps) {
         <Link
           data-work-cta
           href={`/works#${work.id}`}
-          className="mt-8 inline-flex w-fit items-center gap-2 font-sans text-sm font-medium transition-opacity hover:opacity-75 sm:mt-10"
-          style={{ color: ACCENT }}
+          className="view-case-link mt-8 inline-flex w-fit items-center gap-2.5 font-sans text-[0.95rem] font-bold text-sage sm:mt-10 sm:text-base"
         >
           View Case
-          <span aria-hidden className="text-base leading-none">
-            ↘
+          <span aria-hidden className="view-case-arrow text-lg leading-none">
+            <span className="view-case-arrow-icon">↗</span>
+            <span className="view-case-arrow-icon">↗</span>
           </span>
+          <span aria-hidden className="view-case-underline" />
         </Link>
       </div>
     </article>
@@ -293,7 +293,7 @@ const FeaturedWorks = forwardRef<HTMLElement>(function FeaturedWorks(_, ref) {
       >
         <div
           ref={trackRef}
-          className="flex w-max will-change-transform font-serif text-[clamp(3.25rem,9vw,7.5rem)] leading-none tracking-[-0.035em] text-[#2B4625]"
+          className="flex w-max will-change-transform font-serif text-[clamp(3.25rem,9vw,7.5rem)] leading-none tracking-[-0.035em] text-sage"
         >
           <div className="flex shrink-0">{marqueeChunk}</div>
           <div className="flex shrink-0" aria-hidden>
