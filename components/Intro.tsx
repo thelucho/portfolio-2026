@@ -4,6 +4,7 @@ import { useLayoutEffect, useRef, useState } from 'react'
 import gsap from 'gsap'
 import { SplitText } from 'gsap/SplitText'
 import { signalIntroComplete } from '@/lib/intro'
+import NoiseLayer from '@/components/NoiseLayer'
 
 gsap.registerPlugin(SplitText)
 
@@ -102,11 +103,13 @@ export default function Intro() {
           <div
             ref={panelRef}
             className="absolute inset-0 bg-[#2B4625] will-change-[opacity,filter]"
-          />
+          >
+            <NoiseLayer />
+          </div>
 
           <div
             ref={logoRef}
-            className="absolute inset-0 flex items-center justify-center"
+            className="absolute inset-0 z-10 flex items-center justify-center"
           >
             <div className="overflow-hidden inline-block">
             <div className="flex flex-col items-center justify-center">

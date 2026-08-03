@@ -31,6 +31,19 @@ export default function SmoothScroll({ children }: SmoothScrollProps) {
   const lenisRef = useRef<LenisRef>(null)
 
   useEffect(() => {
+    if ('scrollRestoration' in history) {
+      history.scrollRestoration = 'manual'
+    }
+
+    const scrollToTop = () => {
+      window.scrollTo(0, 0)
+      lenisRef.current?.lenis?.scrollTo(0, { immediate: true })
+    }
+
+    scrollToTop()
+    // Lenis may finish init one frame later than this effect.
+    const rafId = requestAnimationFrame(scrollToTop)
+
     const update = (time: number) => {
       lenisRef.current?.lenis?.raf(time * 1000)
     }
@@ -39,6 +52,7 @@ export default function SmoothScroll({ children }: SmoothScrollProps) {
     gsap.ticker.lagSmoothing(0)
 
     return () => {
+      cancelAnimationFrame(rafId)
       gsap.ticker.remove(update)
     }
   }, [])

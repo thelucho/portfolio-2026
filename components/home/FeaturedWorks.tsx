@@ -6,10 +6,12 @@ import Link from 'next/link'
 import gsap from 'gsap'
 import { useGSAP } from '@gsap/react'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import { SplitText } from 'gsap/SplitText'
 import { useLenis } from 'lenis/react'
-import { FEATURED_WORKS, type FeaturedWork } from '@/lib/works'
+import { FEATURED_WORKS, workPath, type FeaturedWork } from '@/lib/works'
+import NoiseLayer from '@/components/NoiseLayer'
 
-gsap.registerPlugin(ScrollTrigger, useGSAP)
+gsap.registerPlugin(ScrollTrigger, SplitText, useGSAP)
 
 const MARQUEE_PHRASE = 'Featured Works — '
 const MARQUEE_COPIES = 8
@@ -28,18 +30,26 @@ function WorkRow({ work, reverse }: WorkRowProps) {
         reverse ? 'lg:flex-row-reverse' : 'lg:flex-row'
       }`}
     >
-      <div
+      <Link
+        href={workPath(work)}
         data-work-media
-        className="relative aspect-square w-full overflow-hidden rounded-[2rem] lg:w-[min(48%,560px)] lg:shrink-0"
+        data-cursor="view"
+        className="relative aspect-square w-full overflow-hidden [transform-style:preserve-3d] lg:w-[min(48%,560px)] lg:shrink-0"
+        aria-label={`View case: ${work.title}`}
       >
-        <Image
-          src={work.image}
-          alt={work.imageAlt}
-          fill
-          sizes="(max-width: 1024px) 100vw, 560px"
-          className="object-cover"
-        />
-      </div>
+        <div
+          data-work-image
+          className="absolute inset-0 h-full w-full will-change-transform [transform-style:preserve-3d]"
+        >
+          <Image
+            src={work.image}
+            alt={work.imageAlt}
+            fill
+            sizes="(max-width: 1024px) 100vw, 560px"
+            className="object-cover"
+          />
+        </div>
+      </Link>
 
       <div data-work-copy className="flex min-w-0 flex-1 flex-col justify-center">
         <p
@@ -53,7 +63,9 @@ function WorkRow({ work, reverse }: WorkRowProps) {
           data-work-title
           className="max-w-[16ch] font-serif text-[clamp(1.85rem,3.4vw,3.15rem)] leading-[1.12] tracking-[-0.03em] text-[#2B4625]"
         >
-          {work.title}
+          <Link href={workPath(work)} className="transition-opacity hover:opacity-70">
+            {work.title}
+          </Link>
         </h3>
 
         <dl data-work-meta className="mt-8 flex flex-col gap-2.5 sm:mt-10 sm:gap-3">
@@ -77,7 +89,7 @@ function WorkRow({ work, reverse }: WorkRowProps) {
                     href={work.href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="break-all transition-opacity hover:opacity-70"
+                    className="work-site-link break-all transition-opacity hover:opacity-70"
                   >
                     {value}
                   </a>
@@ -91,8 +103,8 @@ function WorkRow({ work, reverse }: WorkRowProps) {
 
         <Link
           data-work-cta
-          href={`/works#${work.id}`}
-          className="view-case-link mt-8 inline-flex w-fit items-center gap-2.5 font-sans text-[0.95rem] font-bold text-sage sm:mt-10 sm:text-base"
+          href={workPath(work)}
+          className="view-case-link mt-8 inline-flex w-fit items-center gap-2.5 font-sans sm:mt-10"
         >
           View Case
           <span aria-hidden className="view-case-arrow text-lg leading-none">
@@ -104,6 +116,232 @@ function WorkRow({ work, reverse }: WorkRowProps) {
       </div>
     </article>
   )
+}
+
+function bindWorkHover(row: HTMLElement) {
+  const media = row.querySelector<HTMLElement>('[data-work-media]')
+  const image = row.querySelector<HTMLElement>('[data-work-image]')
+  if (!media || !image) return () => {}
+
+  gsap.set(media, { transformPerspective: 1200 })
+  gsap.set(image, { transformOrigin: '50% 50%', force3D: true })
+
+  const rotXTo = gsap.quickTo(image, 'rotationX', { duration: 0.7, ease: 'power3' })
+  const rotYTo = gsap.quickTo(image, 'rotationY', { duration: 0.7, ease: 'power3' })
+  const xTo = gsap.quickTo(image, 'xPercent', { duration: 0.8, ease: 'power3' })
+  const yTo = gsap.quickTo(image, 'yPercent', { duration: 0.8, ease: 'power3' })
+
+  const clipProxy = { t: 0, r: 0, b: 0, l: 0 }
+  let clipTween: gsap.core.Tween | undefined
+  let hovering = false
+
+  const renderClip = () => {
+    gsap.set(media, {
+      clipPath: `inset(${clipProxy.t}% ${clipProxy.r}% ${clipProxy.b}% ${clipProxy.l}%)`,
+    })
+  }
+
+  const animateClip = (t: number, r: number, b: number, l: number, duration: number) => {
+    clipTween?.kill()
+    clipTween = gsap.to(clipProxy, {
+      t,
+      r,
+      b,
+      l,
+      duration,
+      ease: 'power3.out',
+      overwrite: 'auto',
+      onUpdate: renderClip,
+    })
+  }
+
+  const onPointerEnter = () => {
+    if (!row.hasAttribute('data-work-ready')) return
+    hovering = true
+    gsap.to(image, {
+      scale: 1.14,
+      duration: 0.95,
+      ease: 'power3.out',
+      overwrite: 'auto',
+    })
+  }
+
+  const onPointerMove = (event: PointerEvent) => {
+    if (!row.hasAttribute('data-work-ready')) return
+
+    if (!hovering) {
+      hovering = true
+      gsap.to(image, {
+        scale: 1.14,
+        duration: 0.95,
+        ease: 'power3.out',
+        overwrite: 'auto',
+      })
+    }
+
+    const rect = row.getBoundingClientRect()
+    if (rect.width === 0 || rect.height === 0) return
+
+    const nx = gsap.utils.clamp(-1, 1, ((event.clientX - rect.left) / rect.width) * 2 - 1)
+    const ny = gsap.utils.clamp(-1, 1, ((event.clientY - rect.top) / rect.height) * 2 - 1)
+
+    // Tilt toward the cursor; image drifts opposite for depth.
+    rotXTo(ny * -10)
+    rotYTo(nx * 12)
+    xTo(nx * -4.5)
+    yTo(ny * -4.5)
+
+    // Asymmetric aperture that leans into the pointer.
+    const depth = 2.8
+    animateClip(
+      Math.max(0, depth - ny * 2.2),
+      Math.max(0, depth + nx * 2.2),
+      Math.max(0, depth + ny * 2.2),
+      Math.max(0, depth - nx * 2.2),
+      0.55,
+    )
+  }
+
+  const onPointerLeave = () => {
+    hovering = false
+    gsap.to(image, {
+      scale: 1,
+      rotationX: 0,
+      rotationY: 0,
+      xPercent: 0,
+      yPercent: 0,
+      duration: 1,
+      ease: 'power3.out',
+      overwrite: 'auto',
+    })
+    animateClip(0, 0, 0, 0, 0.85)
+    clipTween?.eventCallback('onComplete', () => {
+      if (!hovering) gsap.set(media, { clearProps: 'clipPath' })
+    })
+  }
+
+  row.addEventListener('pointerenter', onPointerEnter)
+  row.addEventListener('pointermove', onPointerMove)
+  row.addEventListener('pointerleave', onPointerLeave)
+
+  return () => {
+    row.removeEventListener('pointerenter', onPointerEnter)
+    row.removeEventListener('pointermove', onPointerMove)
+    row.removeEventListener('pointerleave', onPointerLeave)
+    clipTween?.kill()
+    gsap.killTweensOf([image, media, clipProxy])
+    gsap.set(image, { clearProps: 'transform' })
+    gsap.set(media, { clearProps: 'clipPath,transform' })
+  }
+}
+
+function revealWorkRow(row: HTMLElement) {
+  const media = row.querySelector<HTMLElement>('[data-work-media]')
+  const image = row.querySelector<HTMLElement>('[data-work-image]')
+  const brand = row.querySelector<HTMLElement>('[data-work-brand]')
+  const title = row.querySelector<HTMLElement>('[data-work-title]')
+  const metaRows = gsap.utils.toArray<HTMLElement>(row.querySelectorAll('[data-work-meta-row]'))
+  const cta = row.querySelector<HTMLElement>('[data-work-cta]')
+
+  // Awwwards-style image: wipe up + scale settle inside overflow.
+  if (media) {
+    gsap.set(media, {
+      autoAlpha: 1,
+      clipPath: 'inset(100% 0 0 0)',
+    })
+  }
+  if (image) {
+    gsap.set(image, { scale: 1.2 })
+  }
+
+  gsap.set([brand, ...metaRows, cta].filter(Boolean), {
+    autoAlpha: 0,
+    y: 32,
+  })
+
+  let titleWords: Element[] = []
+  let split: SplitText | undefined
+  if (title) {
+    // Parent was hidden to prevent FOUC; show it so masked words can reveal.
+    gsap.set(title, { autoAlpha: 1 })
+    split = SplitText.create(title, {
+      type: 'words',
+      mask: 'words',
+    })
+    titleWords = split.words
+    gsap.set(titleWords, { yPercent: 110 })
+  }
+
+  const tl = gsap.timeline({
+    paused: true,
+    onComplete: () => {
+      if (media) gsap.set(media, { clearProps: 'clipPath' })
+      if (image) gsap.set(image, { clearProps: 'transform' })
+      row.setAttribute('data-work-ready', '')
+    },
+  })
+
+  if (media) {
+    tl.to(
+      media,
+      {
+        clipPath: 'inset(0% 0% 0% 0%)',
+        duration: 1.25,
+        ease: 'power3.inOut',
+      },
+      0,
+    )
+  }
+  if (image) {
+    tl.to(
+      image,
+      {
+        scale: 1,
+        duration: 1.45,
+        ease: 'power2.out',
+      },
+      0,
+    )
+  }
+  if (brand) {
+    tl.to(brand, { autoAlpha: 1, y: 0, duration: 0.7, ease: 'power3.out' }, 0.35)
+  }
+  if (titleWords.length) {
+    // Word-by-Word Build (masked yPercent reveal)
+    tl.to(
+      titleWords,
+      {
+        yPercent: 0,
+        duration: 0.9,
+        stagger: 0.07,
+        ease: 'power3.out',
+      },
+      0.42,
+    )
+  }
+  if (metaRows.length) {
+    tl.to(
+      metaRows,
+      { autoAlpha: 1, y: 0, duration: 0.55, stagger: 0.08, ease: 'power2.out' },
+      0.62,
+    )
+  }
+  if (cta) {
+    tl.to(cta, { autoAlpha: 1, y: 0, duration: 0.6, ease: 'power3.out' }, '-=0.2')
+  }
+
+  const st = ScrollTrigger.create({
+    trigger: row,
+    start: 'top 80%',
+    once: true,
+    onEnter: () => tl.play(0),
+  })
+
+  return () => {
+    st.kill()
+    tl.kill()
+    split?.revert()
+  }
 }
 
 const FeaturedWorks = forwardRef<HTMLElement>(function FeaturedWorks(_, ref) {
@@ -172,6 +410,9 @@ const FeaturedWorks = forwardRef<HTMLElement>(function FeaturedWorks(_, ref) {
       measureChunk()
 
       const mm = gsap.matchMedia()
+      const cleanups: Array<() => void> = []
+      let raf1 = 0
+      let raf2 = 0
 
       mm.add('(prefers-reduced-motion: reduce)', () => {
         reducedMotion.current = true
@@ -179,19 +420,40 @@ const FeaturedWorks = forwardRef<HTMLElement>(function FeaturedWorks(_, ref) {
         gsap.set(section.querySelectorAll('[data-work-row]'), { autoAlpha: 1 })
         gsap.set(
           section.querySelectorAll(
-            '[data-work-media], [data-work-brand], [data-work-title], [data-work-meta-row], [data-work-cta]',
+            '[data-work-media], [data-work-image], [data-work-brand], [data-work-title], [data-work-meta-row], [data-work-cta]',
           ),
-          { autoAlpha: 1, y: 0, clearProps: 'transform' },
+          { autoAlpha: 1, y: 0, scale: 1, clearProps: 'transform,clipPath' },
         )
       })
+
+      mm.add(
+        '(prefers-reduced-motion: no-preference) and (hover: hover) and (pointer: fine)',
+        () => {
+          const hoverCleanups: Array<() => void> = []
+          const rows = gsap.utils.toArray<HTMLElement>(
+            section.querySelectorAll('[data-work-row]'),
+          )
+          rows.forEach((row) => {
+            hoverCleanups.push(bindWorkHover(row))
+          })
+          return () => {
+            hoverCleanups.splice(0).forEach((fn) => fn())
+          }
+        },
+      )
 
       mm.add('(prefers-reduced-motion: no-preference)', () => {
         reducedMotion.current = false
         gsap.set(marquee, { autoAlpha: 0, y: 28 })
 
-        const rows = gsap.utils.toArray<HTMLElement>(section.querySelectorAll('[data-work-row]'))
+        const rows = gsap.utils.toArray<HTMLElement>(
+          section.querySelectorAll('[data-work-row]'),
+        )
+
+        // Hide immediately to avoid a flash before triggers are wired.
         rows.forEach((row) => {
           const media = row.querySelector<HTMLElement>('[data-work-media]')
+          const image = row.querySelector<HTMLElement>('[data-work-image]')
           const brand = row.querySelector<HTMLElement>('[data-work-brand]')
           const title = row.querySelector<HTMLElement>('[data-work-title]')
           const metaRows = gsap.utils.toArray<HTMLElement>(
@@ -199,39 +461,22 @@ const FeaturedWorks = forwardRef<HTMLElement>(function FeaturedWorks(_, ref) {
           )
           const cta = row.querySelector<HTMLElement>('[data-work-cta]')
 
-          gsap.set([media, brand, title, ...metaRows, cta].filter(Boolean), {
-            autoAlpha: 0,
-            y: 36,
-          })
+          if (media) gsap.set(media, { clipPath: 'inset(100% 0 0 0)' })
+          if (image) gsap.set(image, { scale: 1.2 })
+          if (title) gsap.set(title, { autoAlpha: 0 })
+          gsap.set([brand, ...metaRows, cta].filter(Boolean), { autoAlpha: 0, y: 32 })
+        })
 
-          const tl = gsap.timeline({
-            scrollTrigger: {
-              trigger: row,
-              start: 'top 78%',
-              toggleActions: 'play none none none',
-              once: true,
-            },
+        // Defer until after parent pin ScrollTriggers mount, then refresh
+        // so start positions aren't calculated before pin-spacing exists.
+        raf1 = requestAnimationFrame(() => {
+          raf2 = requestAnimationFrame(() => {
+            ScrollTrigger.refresh()
+            rows.forEach((row) => {
+              cleanups.push(revealWorkRow(row))
+            })
+            ScrollTrigger.refresh()
           })
-
-          if (media) {
-            tl.to(media, { autoAlpha: 1, y: 0, duration: 1.05, ease: 'power3.out' }, 0)
-          }
-          if (brand) {
-            tl.to(brand, { autoAlpha: 1, y: 0, duration: 0.7, ease: 'power3.out' }, 0.12)
-          }
-          if (title) {
-            tl.to(title, { autoAlpha: 1, y: 0, duration: 0.9, ease: 'power3.out' }, 0.2)
-          }
-          if (metaRows.length) {
-            tl.to(
-              metaRows,
-              { autoAlpha: 1, y: 0, duration: 0.55, stagger: 0.07, ease: 'power2.out' },
-              0.38,
-            )
-          }
-          if (cta) {
-            tl.to(cta, { autoAlpha: 1, y: 0, duration: 0.6, ease: 'power3.out' }, 0.55)
-          }
         })
 
         gsap.to(marquee, {
@@ -246,6 +491,12 @@ const FeaturedWorks = forwardRef<HTMLElement>(function FeaturedWorks(_, ref) {
             scrub: 0.4,
           },
         })
+
+        return () => {
+          cancelAnimationFrame(raf1)
+          cancelAnimationFrame(raf2)
+          cleanups.splice(0).forEach((fn) => fn())
+        }
       })
 
       const onResize = () => {
@@ -265,7 +516,10 @@ const FeaturedWorks = forwardRef<HTMLElement>(function FeaturedWorks(_, ref) {
       window.addEventListener('resize', onResize)
 
       return () => {
+        cancelAnimationFrame(raf1)
+        cancelAnimationFrame(raf2)
         window.removeEventListener('resize', onResize)
+        cleanups.splice(0).forEach((fn) => fn())
         mm.revert()
       }
     },
@@ -286,6 +540,7 @@ const FeaturedWorks = forwardRef<HTMLElement>(function FeaturedWorks(_, ref) {
       className="relative z-20 -mt-[20dvh] overflow-x-clip pb-28 pt-10 text-[#2B4625] md:pb-40 md:pt-14"
       style={{ backgroundColor: CREAM }}
     >
+      <NoiseLayer className="z-0" />
       <div
         ref={marqueeRef}
         className="relative z-10 mb-28 overflow-hidden md:mb-40 lg:mb-52"

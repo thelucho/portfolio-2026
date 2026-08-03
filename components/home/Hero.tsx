@@ -7,6 +7,7 @@ import gsap from 'gsap'
 import { useGSAP } from '@gsap/react'
 import { CustomEase } from 'gsap/CustomEase'
 import { HERO_INTRO_DELAY, onIntroComplete } from '@/lib/intro'
+import NoiseLayer from '@/components/NoiseLayer'
 
 gsap.registerPlugin(CustomEase, useGSAP)
 
@@ -342,13 +343,14 @@ export default function Hero() {
         height={1560}
         priority
         aria-hidden
-        className="pointer-events-none absolute top-0 left-0 z-0 h-auto w-auto max-w-none select-none"
+        className="pointer-events-none absolute top-[-304px] left-0 z-0 h-auto w-auto max-w-none select-none"
       />
       <div
         ref={spotlightRef}
         aria-hidden
         className="pointer-events-none absolute top-0 left-0 z-[1] size-[520px] rounded-full bg-[#5b7d54]/40 blur-[100px] will-change-transform"
       />
+      <NoiseLayer className="z-[2]" />
       <div className="relative z-10 w-[977px]">
         <span
           ref={creativeLabelRef}

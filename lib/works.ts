@@ -11,6 +11,20 @@ export type FeaturedWork = {
   imageAlt: string
 }
 
+/** URL slug from a brand name, e.g. "AIMS International" → "aims-international". */
+export function slugFromBrand(brand: string): string {
+  return brand
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '')
+}
+
+export function workPath(work: FeaturedWork): string {
+  return `/works/${slugFromBrand(work.brand)}`
+}
+
 export const FEATURED_WORKS: FeaturedWork[] = [
   {
     id: 'oneaxiom',

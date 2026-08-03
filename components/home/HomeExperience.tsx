@@ -7,6 +7,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import Hero from '@/components/home/Hero'
 import Manifesto from '@/components/home/Manifesto'
 import FeaturedWorks from '@/components/home/FeaturedWorks'
+import NoiseLayer from '@/components/NoiseLayer'
 
 gsap.registerPlugin(ScrollTrigger, useGSAP)
 
@@ -16,6 +17,7 @@ export default function HomeExperience() {
   const heroLayerRef = useRef<HTMLDivElement>(null)
   const creamRef = useRef<HTMLDivElement>(null)
   const manifestoRef = useRef<HTMLDivElement>(null)
+  const manifestoInnerRef = useRef<HTMLDivElement>(null)
   const worksRef = useRef<HTMLElement>(null)
 
   useGSAP(
@@ -24,12 +26,15 @@ export default function HomeExperience() {
       const heroLayer = heroLayerRef.current
       const cream = creamRef.current
       const manifesto = manifestoRef.current
+      const manifestoInner = manifestoInnerRef.current
       const works = worksRef.current
-      if (!stage || !heroLayer || !cream || !manifesto || !works) return
+      if (!stage || !heroLayer || !cream || !manifesto || !manifestoInner || !works) return
 
       const words = gsap.utils.toArray<HTMLElement>(manifesto.querySelectorAll('[data-word]'))
       const leafStart = manifesto.querySelector<HTMLElement>('[data-leaf="start"]')
       const leafEnd = manifesto.querySelector<HTMLElement>('[data-leaf="end"]')
+      const manifestoBg = manifesto.querySelector<HTMLElement>('[data-manifesto-bg]')
+      const manifestoCta = manifesto.querySelector<HTMLElement>('[data-manifesto-cta]')
       const leaves = [leafStart, leafEnd].filter(Boolean)
       const mm = gsap.matchMedia()
 
@@ -46,16 +51,25 @@ export default function HomeExperience() {
         gsap.set(cream, { opacity: 1 })
         gsap.set(words, { opacity: 1 })
         gsap.set(manifesto, { autoAlpha: 1 })
+        gsap.set(manifestoInner, { autoAlpha: 1, y: 0 })
         gsap.set(leaves, { opacity: 1 })
+        if (manifestoBg) gsap.set(manifestoBg, { opacity: 1 })
+        if (manifestoCta) gsap.set(manifestoCta, { autoAlpha: 1, y: 0 })
         setHeaderTheme(true)
       })
 
       mm.add('(prefers-reduced-motion: no-preference)', () => {
         gsap.set(cream, { opacity: 0 })
-        gsap.set(manifesto, { autoAlpha: 0, y: 0 })
+        // Outer layer is owned by the pin timeline; inner by the Works dissolve.
+        // Splitting them avoids two scrub tweens fighting over the same autoAlpha
+        // (which left a ghost Manifesto over the Hero on fast scroll-up).
+        gsap.set(manifesto, { autoAlpha: 0 })
+        gsap.set(manifestoInner, { autoAlpha: 1, y: 0 })
         gsap.set(words, { opacity: 0.2 })
         gsap.set(heroLayer, { autoAlpha: 1, y: 0, scale: 1 })
         gsap.set(leaves, { opacity: 0.3 })
+        if (manifestoBg) gsap.set(manifestoBg, { opacity: 0 })
+        if (manifestoCta) gsap.set(manifestoCta, { autoAlpha: 0, y: 16 })
 
         const tl = gsap.timeline({
           scrollTrigger: {
@@ -124,6 +138,20 @@ export default function HomeExperience() {
           1.9,
         )
 
+        // Background watermark fades in as the phrase begins to paint.
+        if (manifestoBg) {
+          const paintDuration = 0.4 + Math.max(0, words.length - 1) * 0.12
+          tl.to(
+            manifestoBg,
+            {
+              opacity: 1,
+              ease: 'none',
+              duration: paintDuration,
+            },
+            1.9,
+          )
+        }
+
         // First leaf: 30% → 100% with the opening words.
         if (leafStart) {
           tl.to(
@@ -139,8 +167,8 @@ export default function HomeExperience() {
 
         // Second leaf: 30% → 100% as the closing words paint in.
         // Last word starts ~1.9 + (n-1)*0.12; land the fade on that final beat.
+        const lastWordStart = 1.9 + Math.max(0, words.length - 1) * 0.12
         if (leafEnd) {
-          const lastWordStart = 1.9 + Math.max(0, words.length - 1) * 0.12
           tl.to(
             leafEnd,
             {
@@ -152,15 +180,29 @@ export default function HomeExperience() {
           )
         }
 
+        // CTA settles in after the phrase finishes painting — same language as Works.
+        if (manifestoCta) {
+          tl.to(
+            manifestoCta,
+            {
+              autoAlpha: 1,
+              y: 0,
+              ease: 'none',
+              duration: 0.55,
+            },
+            lastWordStart + 0.25,
+          )
+        }
+
         // Brief hold, then release the pin while the manifesto is still visible.
         tl.to({}, { duration: 0.3 })
 
-        // Manifesto dissolve vs Featured Works.
+        // Manifesto dissolve vs Featured Works (inner layer only).
         // Tune with start/end: larger gap between the two % = slower fade.
         //   start — when fade begins (works top hits this viewport line)
         //   end   — when fade finishes (lower % = stays visible longer)
         gsap.fromTo(
-          manifesto,
+          manifestoInner,
           { autoAlpha: 1, y: 0 },
           {
             autoAlpha: 0,
@@ -178,6 +220,9 @@ export default function HomeExperience() {
         )
       })
 
+      // Recalc triggers below this pin (Featured Works entrances, etc.).
+      ScrollTrigger.refresh()
+
       return () => {
         mm.revert()
         document.documentElement.removeAttribute('data-header-theme')
@@ -192,7 +237,9 @@ export default function HomeExperience() {
         <div
           aria-hidden
           className="absolute inset-0 bg-[radial-gradient(circle,_#516B4C_0%,_#2B4625_100%)]"
-        />
+        >
+          <NoiseLayer />
+        </div>
 
         <div ref={heroLayerRef} className="absolute inset-0 z-10 will-change-[opacity,transform]">
           <Hero />
@@ -203,13 +250,20 @@ export default function HomeExperience() {
           aria-hidden
           className="pointer-events-none absolute inset-0 z-20 will-change-[opacity]"
           style={{ backgroundColor: '#FDFDEA' }}
-        />
+        >
+          <NoiseLayer />
+        </div>
 
         <div
           ref={manifestoRef}
-          className="absolute inset-0 z-30 flex items-center justify-center will-change-[opacity,transform]"
+          className="absolute inset-0 z-30 flex items-center justify-center will-change-[opacity]"
         >
-          <Manifesto />
+          <div
+            ref={manifestoInnerRef}
+            className="flex h-full w-full items-center justify-center will-change-[opacity,transform]"
+          >
+            <Manifesto />
+          </div>
         </div>
       </div>
 
