@@ -64,17 +64,17 @@ export default function Footer() {
   return (
     <footer
       data-site-footer
-      className="relative z-30 overflow-hidden rounded-t-[2rem] text-[#FDFDEA] md:rounded-t-[2.75rem]"
+      className="site-footer relative z-30 overflow-hidden rounded-t-[2rem] text-[#FDFDEA] md:rounded-t-[2.75rem]"
       style={{
         backgroundImage: 'radial-gradient(circle, #516B4C 0%, #2B4625 100%)',
       }}
     >
       <NoiseLayer className="z-0" />
 
-      <div className="site-container relative z-10 flex flex-col gap-16 pt-16 pb-10 md:gap-24 md:pt-24 md:pb-12 lg:gap-28 lg:pt-28">
-        <div className="flex flex-col gap-10 lg:flex-row lg:items-start lg:justify-between lg:gap-16">
-          <div className="flex flex-col gap-6">
-            <p className="max-w-[16ch] font-sans text-[clamp(1.65rem,3.2vw,2.75rem)] font-semibold leading-[1.15] tracking-[-0.03em] text-[#FDFDEA]">
+      <div className="site-container relative z-10 flex flex-col pt-[var(--footer-pt)] pb-[var(--footer-pb)]">
+        <div className="flex flex-col gap-[var(--footer-top-gap)] lg:flex-row lg:items-start lg:justify-between lg:gap-16">
+          <div className="flex flex-col gap-4 md:gap-6">
+            <p className="max-w-[16ch] font-sans text-[length:var(--footer-cta-size)] font-semibold leading-[1.15] tracking-[-0.03em] text-[#FDFDEA]">
               Let’s connect and create something great together.
             </p>
             <a
@@ -101,8 +101,8 @@ export default function Footer() {
           </nav>
         </div>
 
-        <div className="flex items-end gap-3 md:gap-5">
-          <p className="min-w-0 flex-1 font-serif text-[clamp(3.5rem,16vw,13.5rem)] leading-[0.85] tracking-[-0.04em] text-[#FDFDEA]">
+        <div className="mt-[var(--footer-gap)] flex items-end gap-3 md:gap-5">
+          <p className="min-w-0 flex-1 font-serif text-[length:var(--footer-wordmark-size)] leading-[0.85] tracking-[-0.04em] text-[#FDFDEA]">
             Thelucho
           </p>
           <svg
@@ -113,7 +113,7 @@ export default function Footer() {
             viewBox="0 0 306 306"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
-            className="mb-[1.2em] h-[70px] w-[70px] shrink-0 cursor-pointer will-change-transform"
+            className="mb-[0.9em] h-[var(--footer-mark-size)] w-[var(--footer-mark-size)] shrink-0 cursor-pointer will-change-transform"
           >
             <rect x="153" width="15.3" height="306" fill="#ABC337" />
             <rect
@@ -143,7 +143,7 @@ export default function Footer() {
           </svg>
         </div>
 
-        <div className="flex flex-col gap-4 border-t border-white/15 pt-6 sm:flex-row sm:items-center sm:justify-between sm:gap-8">
+        <div className="mt-[var(--footer-after-wordmark)] flex flex-col gap-4 border-t border-white/15 pt-5 sm:flex-row sm:items-center sm:justify-between sm:gap-8 md:pt-6">
           <p className="font-sans text-xs font-light tracking-wide text-[#FDFDEA]/70 md:text-sm">
             © {YEAR} Thelucho — Creative Developer
           </p>

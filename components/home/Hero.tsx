@@ -334,7 +334,7 @@ export default function Hero() {
   return (
     <section
       ref={sectionRef}
-      className="relative flex h-full w-full items-center justify-center overflow-hidden"
+      className="hero relative flex h-full w-full items-center justify-center overflow-hidden"
     >
       <Image
         src="/images/hero/hero-background-shape.png"
@@ -343,32 +343,32 @@ export default function Hero() {
         height={1560}
         priority
         aria-hidden
-        className="pointer-events-none absolute top-[-411px] left-0 z-0 h-auto w-auto max-w-none select-none"
+        className="pointer-events-none absolute top-[var(--hero-bg-top)] left-0 z-0 h-auto w-auto max-w-none origin-top-left scale-[var(--hero-scale)] select-none"
       />
       <div
         ref={spotlightRef}
         aria-hidden
-        className="pointer-events-none absolute top-0 left-0 z-[1] size-[520px] rounded-full bg-[#5b7d54]/40 blur-[100px] will-change-transform"
+        className="pointer-events-none absolute top-0 left-0 z-[1] size-[var(--hero-spotlight-size)] rounded-full bg-[#5b7d54]/40 blur-[100px] will-change-transform"
       />
       <NoiseLayer className="z-[2]" />
-      <div className="relative z-10 w-[977px]">
+      <div className="relative z-10 w-[var(--hero-block-w)]">
         <span
           ref={creativeLabelRef}
-          className="pointer-events-none absolute top-[11px] right-[-78px] font-serif text-[21px] font-light uppercase leading-[97%] text-[#ABC337] will-change-[clip-path]"
+          className="pointer-events-none absolute top-[var(--hero-label-top)] right-[var(--hero-label-x)] font-serif text-[length:var(--hero-label-size)] font-light uppercase leading-[97%] text-[#ABC337] will-change-[clip-path]"
         >
           Creative Developer
         </span>
         <span
           ref={sinceLabelRef}
-          className="pointer-events-none absolute bottom-[14px] left-[-78px] font-serif text-[21px] font-light uppercase leading-[97%] text-[#ABC337] will-change-[clip-path]"
+          className="pointer-events-none absolute bottom-[var(--hero-label-bottom)] left-[var(--hero-label-x)] font-serif text-[length:var(--hero-label-size)] font-light uppercase leading-[97%] text-[#ABC337] will-change-[clip-path]"
         >
           Since 2010
         </span>
         <h1
           ref={titleRef}
-          className="font-serif text-[130px] font-normal uppercase leading-[91%] tracking-[-3px] text-white"
+          className="font-serif text-[length:var(--hero-title-size)] font-normal uppercase leading-[91%] tracking-[var(--hero-title-tracking)] text-white"
         >
-          <span data-hero-line className="block pl-[88px]">
+          <span data-hero-line className="block pl-[var(--hero-line-1-pl)]">
             <span data-hero-el className="inline-block">
               I
             </span>{' '}
@@ -377,7 +377,7 @@ export default function Hero() {
                 href="/about"
                 data-hero-mask
                 aria-label="About Me"
-                className="relative mx-3 flex h-[88px] w-[161px] -translate-x-[12px] -translate-y-[12px] items-center justify-center overflow-hidden rounded-[50px]"
+                className="relative mx-[var(--hero-mask-mx)] flex h-[var(--hero-mask-h)] w-[var(--hero-mask-w)] translate-x-[var(--hero-mask-shift)] translate-y-[var(--hero-mask-shift)] items-center justify-center overflow-hidden rounded-[50px]"
               >
                 <Image
                   src="/images/hero/hero-img-heading-01.jpg"
@@ -385,7 +385,7 @@ export default function Hero() {
                   width={161}
                   height={88}
                   aria-hidden
-                  className="h-[88px] w-[161px] max-w-none shrink-0 object-cover"
+                  className="h-[var(--hero-mask-h)] w-[var(--hero-mask-w)] max-w-none shrink-0 object-cover"
                 />
                 <span
                   data-hero-mask-overlay
@@ -416,7 +416,7 @@ export default function Hero() {
                 <span
                   data-hero-mask-label
                   aria-hidden
-                  className="pointer-events-none absolute inset-0 z-10 flex items-center justify-center px-2 text-center font-serif text-[15px] font-light uppercase leading-tight tracking-wide text-white opacity-0"
+                  className="pointer-events-none absolute inset-0 z-10 flex items-center justify-center px-2 text-center font-serif text-[length:var(--hero-mask-label-size)] font-light uppercase leading-tight tracking-wide text-white opacity-0"
                 >
                   About Me
                 </span>
@@ -427,7 +427,7 @@ export default function Hero() {
             </span>
           </span>
 
-          <span data-hero-line className="block pl-[160px]">
+          <span data-hero-line className="block pl-[var(--hero-line-2-pl)]">
             <span data-hero-el className="inline-block">
               promise
             </span>{' '}
@@ -436,7 +436,7 @@ export default function Hero() {
                 href="/works"
                 data-hero-mask
                 aria-label="Works"
-                className="relative mx-3 flex h-[88px] w-[161px] -translate-x-[12px] -translate-y-[12px] items-center justify-center overflow-hidden rounded-[50px]"
+                className="relative mx-[var(--hero-mask-mx)] flex h-[var(--hero-mask-h)] w-[var(--hero-mask-w)] translate-x-[var(--hero-mask-shift)] translate-y-[var(--hero-mask-shift)] items-center justify-center overflow-hidden rounded-[50px]"
               >
                 <Image
                   src="/images/hero/hero-img-heading-02.jpg"
@@ -444,7 +444,7 @@ export default function Hero() {
                   width={161}
                   height={88}
                   aria-hidden
-                  className="h-[88px] w-[161px] max-w-none shrink-0 object-cover"
+                  className="h-[var(--hero-mask-h)] w-[var(--hero-mask-w)] max-w-none shrink-0 object-cover"
                 />
                 <span
                   data-hero-mask-overlay
@@ -475,7 +475,7 @@ export default function Hero() {
                 <span
                   data-hero-mask-label
                   aria-hidden
-                  className="pointer-events-none absolute inset-0 z-10 flex items-center justify-center px-2 text-center font-serif text-[15px] font-light uppercase leading-tight tracking-wide text-white opacity-0"
+                  className="pointer-events-none absolute inset-0 z-10 flex items-center justify-center px-2 text-center font-serif text-[length:var(--hero-mask-label-size)] font-light uppercase leading-tight tracking-wide text-white opacity-0"
                 >
                   Works
                 </span>
@@ -492,7 +492,7 @@ export default function Hero() {
             </span>
           </span>
 
-          <span className="block pl-[130px]">
+          <span className="block pl-[var(--hero-line-4-pl)]">
             <span data-hero-el className="inline-block">
               I
             </span>{' '}
@@ -506,7 +506,7 @@ export default function Hero() {
         </h1>
       </div>
 
-      <div className="pointer-events-none absolute bottom-10 left-1/2 z-10 -translate-x-1/2">
+      <div className="pointer-events-none absolute bottom-[var(--hero-scroll-bottom)] left-1/2 z-10 origin-bottom -translate-x-1/2 scale-[var(--hero-scale)]">
         <svg
           width={181}
           height={95}

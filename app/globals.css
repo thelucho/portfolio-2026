@@ -103,6 +103,91 @@ html.lenis body {
   }
 }
 
+/*
+ * Hero fluid scale — authored at ~1905×917 CSS px.
+ * Below that height/width, the whole composition shrinks together so
+ * title, masks, labels, and scroll cue keep their relative positions.
+ */
+.hero {
+  /*
+   * Prefer height: short laptop viewports (and Windows display scaling) are the crunch.
+   * Locked to the ~1905×917 authoring viewport — scale stays 1 there and shrinks below.
+   */
+  --hero-scale: min(1, 100dvh / 917px, 100vw / 1360px);
+  --hero-title-size: calc(130px * var(--hero-scale));
+  --hero-title-tracking: calc(-3px * var(--hero-scale));
+  --hero-block-w: calc(977px * var(--hero-scale));
+  --hero-label-size: calc(21px * var(--hero-scale));
+  --hero-label-x: calc(-78px * var(--hero-scale));
+  --hero-label-top: calc(11px * var(--hero-scale));
+  --hero-label-bottom: calc(14px * var(--hero-scale));
+  --hero-mask-w: calc(161px * var(--hero-scale));
+  --hero-mask-h: calc(88px * var(--hero-scale));
+  --hero-mask-mx: calc(12px * var(--hero-scale));
+  --hero-mask-shift: calc(-12px * var(--hero-scale));
+  --hero-mask-label-size: calc(15px * var(--hero-scale));
+  --hero-line-1-pl: calc(88px * var(--hero-scale));
+  --hero-line-2-pl: calc(160px * var(--hero-scale));
+  --hero-line-4-pl: calc(130px * var(--hero-scale));
+  --hero-scroll-bottom: max(1rem, calc(2.5rem * var(--hero-scale)));
+  --hero-bg-top: calc(-411px * var(--hero-scale));
+  --hero-spotlight-size: calc(520px * var(--hero-scale));
+}
+
+/*
+ * Manifesto — large screens keep authored leaf placement.
+ * Below ~Samsung width/height, pull leaves further out so they clear the phrase.
+ */
+.manifesto {
+  --manifesto-scale: min(1, 100dvh / 917px, 100vw / 1360px);
+  --manifesto-bg-size: clamp(7rem, calc(320px * var(--manifesto-scale)), 320px);
+  --manifesto-bg-leading: clamp(6.5rem, calc(300px * var(--manifesto-scale)), 300px);
+  --manifesto-bg-tracking: calc(-20px * var(--manifesto-scale));
+  /* Match current Samsung look (md:-left-10 / md:-top-16, etc.) */
+  --manifesto-leaf-w: clamp(3.5rem, 9vw, 7rem);
+  --manifesto-leaf-start-left: -2.5rem;
+  --manifesto-leaf-start-top: -4rem;
+  --manifesto-leaf-end-right: -2.5rem;
+  --manifesto-leaf-end-bottom: -3.5rem;
+}
+
+@media (max-width: 1700px), (max-height: 880px) {
+  .manifesto {
+    --manifesto-leaf-w: clamp(3.25rem, 7vw, 5.25rem);
+    --manifesto-leaf-start-left: -5rem;
+    --manifesto-leaf-start-top: -4.5rem;
+    --manifesto-leaf-end-right: -5rem;
+    --manifesto-leaf-end-bottom: -4rem;
+  }
+}
+
+/*
+ * Site footer — fluid vertical rhythm so the block fits short laptop viewports
+ * without shrinking the large-monitor composition (scale locks at 1 above ~900dvh).
+ */
+.site-footer {
+  --footer-scale: min(1, 100dvh / 900px);
+  --footer-pt: clamp(2.5rem, calc(7rem * var(--footer-scale)), 7rem);
+  --footer-pb: clamp(1.5rem, calc(3rem * var(--footer-scale)), 3rem);
+  --footer-gap: clamp(1.75rem, calc(7rem * var(--footer-scale)), 7rem);
+  /* Space under the wordmark → bottom rule; matches --footer-gap on large screens */
+  --footer-after-wordmark: var(--footer-gap);
+  --footer-top-gap: clamp(1.5rem, calc(2.5rem * var(--footer-scale)), 2.5rem);
+  --footer-cta-size: clamp(1.5rem, min(3.2vw, 5dvh), 2.75rem);
+  /* 24dvh keeps 13.5rem reachable on ~917px; still caps short laptops */
+  --footer-wordmark-size: clamp(3rem, min(16vw, 24dvh), 13.5rem);
+  --footer-mark-size: clamp(2.25rem, calc(4.375rem * var(--footer-scale)), 4.375rem);
+}
+
+/* Laptop / shorter viewports only — Samsung (~1905×917) is unchanged */
+@media (max-width: 1700px), (max-height: 880px) {
+  .site-footer {
+    --footer-wordmark-size: clamp(3.5rem, min(18vw, 28dvh), 13.5rem);
+    --footer-after-wordmark: 0.85rem;
+    --footer-mark-size: clamp(2.5rem, calc(4.375rem * var(--footer-scale)), 4.375rem);
+  }
+}
+
 /* External site link in Featured Works meta */
 .work-site-link {
   color: var(--palette-olive);

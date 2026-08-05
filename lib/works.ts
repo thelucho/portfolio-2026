@@ -54,7 +54,7 @@ export const FEATURED_WORKS: FeaturedWork[] = [
     id: 'homee',
     brand: 'Homee',
     title: 'Home repair services platform',
-    date: 'April 2025',
+    date: 'April 2026',
     stack: 'Webflow / GSAP',
     agency: 'Studio Hakuna',
     linkLabel: 'homee.com',

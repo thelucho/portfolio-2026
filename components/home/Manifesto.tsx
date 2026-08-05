@@ -10,11 +10,11 @@ const WORDS = PHRASE.split(' ')
 
 export default function Manifesto() {
   return (
-    <div className="relative flex max-w-[min(1100px,calc(100vw-3rem))] flex-col items-center px-6 md:px-10">
+    <div className="manifesto relative flex max-w-[min(1100px,calc(100vw-3rem))] flex-col items-center px-6 md:px-10">
       <p
         data-manifesto-bg
         aria-hidden
-        className="pointer-events-none absolute left-1/2 top-1/2 z-0 -translate-x-1/2 -translate-y-1/2 select-none text-center font-serif text-[320px] font-normal leading-[300px] tracking-[-20px] text-[#516B4C]/9 will-change-[opacity]"
+        className="pointer-events-none absolute left-1/2 top-1/2 z-0 -translate-x-1/2 -translate-y-1/2 select-none text-center font-serif text-[length:var(--manifesto-bg-size)] font-normal leading-[var(--manifesto-bg-leading)] tracking-[var(--manifesto-bg-tracking)] text-[#516B4C]/9 will-change-[opacity]"
       >
         CREATIVE
         <br />
@@ -28,7 +28,7 @@ export default function Manifesto() {
         height={160}
         data-leaf="start"
         aria-hidden
-        className="pointer-events-none absolute -left-2 -top-10 z-10 w-[clamp(3.5rem,9vw,7rem)] translate-x-[20px] select-none will-change-[opacity] md:-left-6 md:-top-14"
+        className="pointer-events-none absolute top-[var(--manifesto-leaf-start-top)] left-[var(--manifesto-leaf-start-left)] z-10 w-[var(--manifesto-leaf-w)] select-none will-change-[opacity]"
       />
 
       <p
@@ -66,7 +66,7 @@ export default function Manifesto() {
         height={160}
         data-leaf="end"
         aria-hidden
-        className="pointer-events-none absolute -bottom-30 -right-2 z-10 w-[clamp(3.5rem,9vw,7rem)] -translate-x-[25px] -translate-y-[24px] select-none will-change-[opacity] md:-bottom-14 md:-right-6"
+        className="pointer-events-none absolute right-[var(--manifesto-leaf-end-right)] bottom-[var(--manifesto-leaf-end-bottom)] z-10 w-[var(--manifesto-leaf-w)] select-none will-change-[opacity]"
       />
     </div>
   )
