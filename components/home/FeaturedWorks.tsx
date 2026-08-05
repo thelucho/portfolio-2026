@@ -10,12 +10,18 @@ import { SplitText } from 'gsap/SplitText'
 import { useLenis } from 'lenis/react'
 import { FEATURED_WORKS, workPath, type FeaturedWork } from '@/lib/works'
 import NoiseLayer from '@/components/NoiseLayer'
+import Footer from '@/components/home/Footer'
+import Statement from '@/components/home/Statement'
 
 gsap.registerPlugin(ScrollTrigger, SplitText, useGSAP)
 
 const MARQUEE_PHRASE = 'Featured Works — '
 const MARQUEE_COPIES = 8
 const CREAM = '#FDFDEA'
+const INK = '#0D1104'
+const FOREST = '#2B4625'
+/** Soft corner radius for work thumbnails (also applied to GSAP clip-paths). */
+const WORK_MEDIA_RADIUS = '12px'
 
 type WorkRowProps = {
   work: FeaturedWork
@@ -34,7 +40,7 @@ function WorkRow({ work, reverse }: WorkRowProps) {
         href={workPath(work)}
         data-work-media
         data-cursor="view"
-        className="relative aspect-square w-full overflow-hidden [transform-style:preserve-3d] lg:w-[min(48%,560px)] lg:shrink-0"
+        className="relative aspect-square w-full overflow-hidden rounded-[12px] [transform-style:preserve-3d] lg:w-[min(48%,560px)] lg:shrink-0"
         aria-label={`View case: ${work.title}`}
       >
         <div
@@ -137,7 +143,7 @@ function bindWorkHover(row: HTMLElement) {
 
   const renderClip = () => {
     gsap.set(media, {
-      clipPath: `inset(${clipProxy.t}% ${clipProxy.r}% ${clipProxy.b}% ${clipProxy.l}%)`,
+      clipPath: `inset(${clipProxy.t}% ${clipProxy.r}% ${clipProxy.b}% ${clipProxy.l}% round ${WORK_MEDIA_RADIUS})`,
     })
   }
 
@@ -247,7 +253,7 @@ function revealWorkRow(row: HTMLElement) {
   if (media) {
     gsap.set(media, {
       autoAlpha: 1,
-      clipPath: 'inset(100% 0 0 0)',
+      clipPath: `inset(100% 0 0 0 round ${WORK_MEDIA_RADIUS})`,
     })
   }
   if (image) {
@@ -285,7 +291,7 @@ function revealWorkRow(row: HTMLElement) {
     tl.to(
       media,
       {
-        clipPath: 'inset(0% 0% 0% 0%)',
+        clipPath: `inset(0% 0% 0% 0% round ${WORK_MEDIA_RADIUS})`,
         duration: 1.25,
         ease: 'power3.inOut',
       },
@@ -417,6 +423,7 @@ const FeaturedWorks = forwardRef<HTMLElement>(function FeaturedWorks(_, ref) {
       mm.add('(prefers-reduced-motion: reduce)', () => {
         reducedMotion.current = true
         gsap.set(marquee, { autoAlpha: 1, y: 0 })
+        gsap.set(section, { backgroundColor: CREAM })
         gsap.set(section.querySelectorAll('[data-work-row]'), { autoAlpha: 1 })
         gsap.set(
           section.querySelectorAll(
@@ -424,6 +431,40 @@ const FeaturedWorks = forwardRef<HTMLElement>(function FeaturedWorks(_, ref) {
           ),
           { autoAlpha: 1, y: 0, scale: 1, clearProps: 'transform,clipPath' },
         )
+
+        const statement = section.querySelector<HTMLElement>('[data-statement]')
+        const footer = section.querySelector<HTMLElement>('[data-site-footer]')
+        if (statement) {
+          ScrollTrigger.create({
+            trigger: statement,
+            start: 'top 70%',
+            end: 'bottom top',
+            onEnter: () => {
+              gsap.set(section, { backgroundColor: INK })
+              document.documentElement.setAttribute('data-header-theme', 'ink')
+            },
+            onEnterBack: () => {
+              gsap.set(section, { backgroundColor: INK })
+              document.documentElement.setAttribute('data-header-theme', 'ink')
+            },
+            onLeaveBack: () => {
+              gsap.set(section, { backgroundColor: CREAM })
+              document.documentElement.setAttribute('data-header-theme', 'light')
+            },
+          })
+        }
+        if (footer) {
+          ScrollTrigger.create({
+            trigger: footer,
+            start: 'top 55%',
+            onEnter: () => {
+              document.documentElement.removeAttribute('data-header-theme')
+            },
+            onLeaveBack: () => {
+              document.documentElement.setAttribute('data-header-theme', 'ink')
+            },
+          })
+        }
       })
 
       mm.add(
@@ -445,6 +486,7 @@ const FeaturedWorks = forwardRef<HTMLElement>(function FeaturedWorks(_, ref) {
       mm.add('(prefers-reduced-motion: no-preference)', () => {
         reducedMotion.current = false
         gsap.set(marquee, { autoAlpha: 0, y: 28 })
+        gsap.set(section, { backgroundColor: CREAM })
 
         const rows = gsap.utils.toArray<HTMLElement>(
           section.querySelectorAll('[data-work-row]'),
@@ -461,11 +503,18 @@ const FeaturedWorks = forwardRef<HTMLElement>(function FeaturedWorks(_, ref) {
           )
           const cta = row.querySelector<HTMLElement>('[data-work-cta]')
 
-          if (media) gsap.set(media, { clipPath: 'inset(100% 0 0 0)' })
+          if (media) gsap.set(media, { clipPath: `inset(100% 0 0 0 round ${WORK_MEDIA_RADIUS})` })
           if (image) gsap.set(image, { scale: 1.2 })
           if (title) gsap.set(title, { autoAlpha: 0 })
           gsap.set([brand, ...metaRows, cta].filter(Boolean), { autoAlpha: 0, y: 32 })
         })
+
+        const setInkTheme = (ink: boolean) => {
+          document.documentElement.setAttribute(
+            'data-header-theme',
+            ink ? 'ink' : 'light',
+          )
+        }
 
         // Defer until after parent pin ScrollTriggers mount, then refresh
         // so start positions aren't calculated before pin-spacing exists.
@@ -475,6 +524,90 @@ const FeaturedWorks = forwardRef<HTMLElement>(function FeaturedWorks(_, ref) {
             rows.forEach((row) => {
               cleanups.push(revealWorkRow(row))
             })
+
+            const statement = section.querySelector<HTMLElement>('[data-statement]')
+            const phrase = section.querySelector<HTMLElement>('[data-statement-phrase]')
+            const statementCta = section.querySelector<HTMLElement>('[data-statement-cta]')
+            const footer = section.querySelector<HTMLElement>('[data-site-footer]')
+
+            if (statement) {
+              // Shared surface wash — GSAP owns backgroundColor (no React style prop).
+              const colorTween = gsap.fromTo(
+                section,
+                { backgroundColor: CREAM },
+                {
+                  backgroundColor: INK,
+                  ease: 'none',
+                  immediateRender: false,
+                  scrollTrigger: {
+                    trigger: statement,
+                    start: 'top 55%',
+                    end: 'top 15%',
+                    scrub: 0.6,
+                    invalidateOnRefresh: true,
+                    onUpdate: (self) => setInkTheme(self.progress >= 0.45),
+                    onLeave: () => setInkTheme(true),
+                    onEnterBack: (self) => setInkTheme(self.progress >= 0.45),
+                    onLeaveBack: () => setInkTheme(false),
+                  },
+                },
+              )
+              cleanups.push(() => {
+                colorTween.scrollTrigger?.kill()
+                colorTween.kill()
+              })
+
+              const statementCopy = [phrase, statementCta].filter(Boolean)
+              if (statementCopy.length) {
+                const phraseTween = gsap.fromTo(
+                  statementCopy,
+                  { color: FOREST },
+                  {
+                    color: CREAM,
+                    ease: 'none',
+                    immediateRender: false,
+                    scrollTrigger: {
+                      trigger: statement,
+                      start: 'top 55%',
+                      end: 'top 15%',
+                      scrub: 0.6,
+                      invalidateOnRefresh: true,
+                    },
+                  },
+                )
+                cleanups.push(() => {
+                  phraseTween.scrollTrigger?.kill()
+                  phraseTween.kill()
+                })
+              }
+
+              // Pin Statement so the footer slides over it (parallax reveal).
+              if (footer) {
+                const pinSt = ScrollTrigger.create({
+                  trigger: statement,
+                  start: 'top top',
+                  endTrigger: footer,
+                  end: 'bottom bottom',
+                  pin: true,
+                  pinSpacing: false,
+                  anticipatePin: 1,
+                  invalidateOnRefresh: true,
+                })
+                cleanups.push(() => pinSt.kill())
+
+                // Forest footer → restore default (white) header chrome.
+                const footerThemeSt = ScrollTrigger.create({
+                  trigger: footer,
+                  start: 'top 50%',
+                  onEnter: () => {
+                    document.documentElement.removeAttribute('data-header-theme')
+                  },
+                  onLeaveBack: () => setInkTheme(true),
+                })
+                cleanups.push(() => footerThemeSt.kill())
+              }
+            }
+
             ScrollTrigger.refresh()
           })
         })
@@ -496,6 +629,10 @@ const FeaturedWorks = forwardRef<HTMLElement>(function FeaturedWorks(_, ref) {
           cancelAnimationFrame(raf1)
           cancelAnimationFrame(raf2)
           cleanups.splice(0).forEach((fn) => fn())
+          gsap.set(section, { backgroundColor: CREAM })
+          if (document.documentElement.getAttribute('data-header-theme') === 'ink') {
+            document.documentElement.setAttribute('data-header-theme', 'light')
+          }
         }
       })
 
@@ -537,8 +674,7 @@ const FeaturedWorks = forwardRef<HTMLElement>(function FeaturedWorks(_, ref) {
       ref={setSectionRef}
       id="featured-works"
       aria-label="Featured Works"
-      className="relative z-20 -mt-[20dvh] overflow-x-clip pb-28 pt-10 text-[#2B4625] md:pb-40 md:pt-14"
-      style={{ backgroundColor: CREAM }}
+      className="relative z-20 -mt-[20dvh] overflow-x-clip bg-[#FDFDEA] pt-10 text-[#2B4625] md:pt-14"
     >
       <NoiseLayer className="z-0" />
       <div
@@ -562,6 +698,27 @@ const FeaturedWorks = forwardRef<HTMLElement>(function FeaturedWorks(_, ref) {
         {FEATURED_WORKS.map((work, index) => (
           <WorkRow key={work.id} work={work} reverse={index % 2 === 1} />
         ))}
+      </div>
+
+      <div className="site-container relative z-10 mt-24 flex justify-center md:mt-32 lg:mt-40">
+        <Link
+          href="/works"
+          className="view-case-link all-works-link inline-flex w-fit items-center gap-2.5 font-sans"
+        >
+          Explore All Works
+          <span aria-hidden className="view-case-arrow text-lg leading-none">
+            <span className="view-case-arrow-icon">↗</span>
+            <span className="view-case-arrow-icon">↗</span>
+          </span>
+          <span aria-hidden className="view-case-underline" />
+        </Link>
+      </div>
+
+      <div className="relative isolate mt-[100px]">
+        <Statement />
+        {/* Extra scroll room while Statement stays pinned before the footer reveal. */}
+        <div aria-hidden className="h-[70dvh] w-full" />
+        <Footer />
       </div>
     </section>
   )

@@ -7,8 +7,9 @@ const HOVER_DURATION = 0.35
 const HOVER_EASE = 'power2.out'
 const INTERACTIVE_SELECTOR = 'a, button, [role="button"]'
 const VIEW_SELECTOR = '[data-cursor="view"]'
+const STATEMENT_SELECTOR = '[data-statement]'
 
-type CursorMode = 'default' | 'interactive' | 'view'
+type CursorMode = 'default' | 'interactive' | 'view' | 'statement'
 
 export default function CustomCursor() {
   const cursorRef = useRef<HTMLDivElement>(null)
@@ -16,6 +17,7 @@ export default function CustomCursor() {
   const viewCircleRef = useRef<HTMLDivElement>(null)
   const dotRef = useRef<HTMLDivElement>(null)
   const arrowRef = useRef<SVGSVGElement>(null)
+  const expandRef = useRef<SVGSVGElement>(null)
 
   useLayoutEffect(() => {
     const cursor = cursorRef.current
@@ -23,7 +25,8 @@ export default function CustomCursor() {
     const viewCircle = viewCircleRef.current
     const dot = dotRef.current
     const arrow = arrowRef.current
-    if (!cursor || !ring || !viewCircle || !dot || !arrow) return
+    const expand = expandRef.current
+    if (!cursor || !ring || !viewCircle || !dot || !arrow || !expand) return
 
     const finePointer = window.matchMedia('(pointer: fine)')
     if (!finePointer.matches) return
@@ -41,6 +44,7 @@ export default function CustomCursor() {
     gsap.set(viewCircle, { scale: 0, opacity: 0 })
     gsap.set(dot, { scale: 1, opacity: 1 })
     gsap.set(arrow, { scale: 0, opacity: 0 })
+    gsap.set(expand, { scale: 0, opacity: 0 })
 
     let mode: CursorMode = 'default'
     let visible = false
@@ -50,7 +54,9 @@ export default function CustomCursor() {
       mode = next
 
       const isView = next === 'view'
+      const isStatement = next === 'statement'
       const isInteractive = next === 'interactive'
+      const hideDot = isView || isStatement
 
       gsap.to(ring, {
         scale: isInteractive ? 1 : 0,
@@ -69,8 +75,8 @@ export default function CustomCursor() {
       })
 
       gsap.to(dot, {
-        scale: isView ? 0 : 1,
-        opacity: isView ? 0 : 1,
+        scale: hideDot ? 0 : 1,
+        opacity: hideDot ? 0 : 1,
         duration: HOVER_DURATION,
         ease: HOVER_EASE,
         overwrite: 'auto',
@@ -83,12 +89,21 @@ export default function CustomCursor() {
         ease: HOVER_EASE,
         overwrite: 'auto',
       })
+
+      gsap.to(expand, {
+        scale: isStatement ? 1 : 0,
+        opacity: isStatement ? 1 : 0,
+        duration: HOVER_DURATION,
+        ease: HOVER_EASE,
+        overwrite: 'auto',
+      })
     }
 
     const resolveMode = (target: EventTarget | null): CursorMode => {
       if (!(target instanceof Element)) return 'default'
       if (target.closest(VIEW_SELECTOR)) return 'view'
       if (target.closest(INTERACTIVE_SELECTOR)) return 'interactive'
+      if (target.closest(STATEMENT_SELECTOR)) return 'statement'
       return 'default'
     }
 
@@ -126,7 +141,7 @@ export default function CustomCursor() {
     >
       <div
         ref={ringRef}
-        className="absolute size-[50px] rounded-full border border-[rgba(171,195,55,0.69)]"
+        className="absolute size-[56px] rounded-full border border-[rgba(171,195,55,0.69)]"
       />
       <div ref={viewCircleRef} className="absolute size-[77px] rounded-full bg-[#ABC337]" />
       <div ref={dotRef} className="size-2.5 rounded-full bg-[#ABC337]" />
@@ -143,6 +158,23 @@ export default function CustomCursor() {
           d="M0.707153 23L22.7072 1M22.7072 23V1H0.707153"
           stroke="#2B4625"
           strokeWidth="2"
+        />
+      </svg>
+      <svg
+        ref={expandRef}
+        width="30"
+        height="30"
+        viewBox="0 0 30 30"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+        className="absolute"
+      >
+        <path
+          d="M10.1421 10.1421L1 1M1 7.09476L1 1L7.09476 1M19.3336 19.3334L28.4758 28.4755M28.4758 22.3807L28.4758 28.4755H22.381M10.1421 19.3334L1 28.4755M1 22.3807L1 28.4755H7.09476M19.3336 10.1421L28.4758 1M28.4758 7.09476L28.4758 1L22.381 1"
+          stroke="#ABC337"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
         />
       </svg>
     </div>

@@ -6,12 +6,14 @@ import "./globals.css";
 import CustomCursor from "@/components/CustomCursor";
 import Header from "@/components/Header";
 import IntroLoader from "@/components/IntroLoader";
+import ScrollToTop from "@/components/ScrollToTop";
 import SmoothScroll from "@/components/SmoothScroll";
 
 const averiaSerifLibre = Averia_Serif_Libre({
   variable: "--font-averia-serif-libre",
   subsets: ["latin"],
   weight: ["300", "400", "700"],
+  style: ["normal", "italic"],
 });
 
 const manrope = Manrope({
@@ -42,6 +44,7 @@ export default function RootLayout({
           <CustomCursor />
           <IntroLoader />
           <Header />
+          <ScrollToTop />
           {children}
         </SmoothScroll>
       </body>

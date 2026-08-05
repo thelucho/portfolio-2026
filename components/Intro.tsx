@@ -24,6 +24,13 @@ export default function Intro() {
 
         const split = SplitText.create(logoText, { type: 'chars', mask: 'chars' })
 
+        // Serif glyphs (esp. trailing "O") overhang their boxes; expand the
+        // overflow:clip masks without changing letter spacing.
+        gsap.set(split.masks, {
+            paddingInline: '0.12em',
+            marginInline: '-0.12em',
+        })
+
         gsap.set(split.chars, {
             opacity: 0,
             y: () => gsap.utils.random(-50, 50),
@@ -111,7 +118,6 @@ export default function Intro() {
             ref={logoRef}
             className="absolute inset-0 z-10 flex items-center justify-center"
           >
-            <div className="overflow-hidden inline-block">
             <div className="flex flex-col items-center justify-center">
             <span
               ref={logoTextRef}
@@ -120,7 +126,6 @@ export default function Intro() {
               Thelucho
             </span>
             <span ref={subLogoTextRef} className="text-xs text-white tracking-[8px] uppercase inline-block opacity-100 will-change-[clip-path]">Creative Developer</span>
-            </div>
             </div>
             
           </div>

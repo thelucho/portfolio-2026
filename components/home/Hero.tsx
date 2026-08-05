@@ -343,7 +343,7 @@ export default function Hero() {
         height={1560}
         priority
         aria-hidden
-        className="pointer-events-none absolute top-[-304px] left-0 z-0 h-auto w-auto max-w-none select-none"
+        className="pointer-events-none absolute top-[-411px] left-0 z-0 h-auto w-auto max-w-none select-none"
       />
       <div
         ref={spotlightRef}
