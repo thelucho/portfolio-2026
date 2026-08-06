@@ -1,18 +1,17 @@
+import InternalPage from '@/components/InternalPage'
+
 export default function Labs() {
   return (
-    <main className="site-container flex flex-1 flex-col gap-6 py-16">
-      <h1 className="text-4xl font-semibold tracking-tight">Labs</h1>
-      <p className="text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod
-        tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
-        veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
-        commodo consequat.
-      </p>
-      <p className="text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-        Duis aute irure dolor in reprehenderit in voluptate velit esse cillum
-        dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
-        proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-      </p>
+    <main className="flex flex-1 flex-col overflow-x-clip">
+      <InternalPage
+        title="Labs"
+        eyebrow="Experiments"
+        description="Playgrounds, prototypes, and motion studies."
+      >
+        <p className="max-w-[42ch] font-sans text-base font-light leading-8 tracking-wide text-[#2B4625]/90 md:text-lg">
+          Experiments and side studies will land here soon.
+        </p>
+      </InternalPage>
     </main>
-  );
+  )
 }

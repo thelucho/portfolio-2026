@@ -75,7 +75,7 @@ export default function Intro() {
             ease: 'power2.in'
         })
         .to(subLogoTextRef.current, {
-            clipPath: 'inset(0 0 0 100%)', // se "cierra" desde la izquierda al salir
+            clipPath: 'inset(0 0 0 100%)', // It "closes" from the left
             duration: 0.4,
             ease: 'power2.in',
         }, '<')

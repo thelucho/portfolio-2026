@@ -5,6 +5,7 @@ import Link from 'next/link'
 import gsap from 'gsap'
 import { useGSAP } from '@gsap/react'
 import { NAV_ITEMS, SOCIAL_LINKS } from '@/lib/navigation'
+import AsteriskMark from '@/components/AsteriskMark'
 import NoiseLayer from '@/components/NoiseLayer'
 
 gsap.registerPlugin(useGSAP)
@@ -18,7 +19,7 @@ export default function Footer() {
   useGSAP(
     (_context, contextSafe) => {
       const mark = markRef.current
-      if (!mark) return
+      if (!mark || !contextSafe) return
 
       const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)')
       if (reducedMotion.matches) return
@@ -105,42 +106,12 @@ export default function Footer() {
           <p className="min-w-0 flex-1 font-serif text-[length:var(--footer-wordmark-size)] leading-[0.85] tracking-[-0.04em] text-[#FDFDEA]">
             Thelucho
           </p>
-          <svg
+          <AsteriskMark
             ref={markRef}
-            aria-hidden
             width={70}
             height={70}
-            viewBox="0 0 306 306"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
             className="mb-[0.9em] h-[var(--footer-mark-size)] w-[var(--footer-mark-size)] shrink-0 cursor-pointer will-change-transform"
-          >
-            <rect x="153" width="15.3" height="306" fill="#ABC337" />
-            <rect
-              x="306"
-              y="145.351"
-              width="15.3"
-              height="306"
-              transform="rotate(90 306 145.351)"
-              fill="#ABC337"
-            />
-            <rect
-              x="261.187"
-              y="44.813"
-              width="15.3"
-              height="306"
-              transform="rotate(45 261.187 44.813)"
-              fill="#ABC337"
-            />
-            <rect
-              x="266.596"
-              y="255.779"
-              width="15.3"
-              height="306"
-              transform="rotate(135 266.596 255.779)"
-              fill="#ABC337"
-            />
-          </svg>
+          />
         </div>
 
         <div className="mt-[var(--footer-after-wordmark)] flex flex-col gap-4 border-t border-white/15 pt-5 sm:flex-row sm:items-center sm:justify-between sm:gap-8 md:pt-6">

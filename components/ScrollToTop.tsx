@@ -19,6 +19,7 @@ export default function ScrollToTop() {
   const buttonRef = useRef<HTMLButtonElement>(null)
   const progressRef = useRef<SVGCircleElement>(null)
   const visibleRef = useRef(false)
+  const onFooterRef = useRef(false)
 
   useGSAP(
     () => {
@@ -32,6 +33,8 @@ export default function ScrollToTop() {
         strokeDashoffset: CIRCUMFERENCE,
       })
       visibleRef.current = false
+      onFooterRef.current = false
+      button.removeAttribute('data-on-footer')
     },
     { dependencies: [pathname], revertOnUpdate: true },
   )
@@ -44,6 +47,22 @@ export default function ScrollToTop() {
 
       const ratio = Math.min(Math.max(progress, 0), 1)
       ring.style.strokeDashoffset = String(CIRCUMFERENCE * (1 - ratio))
+
+      // Ring sits fixed over the footer long before header theme flips —
+      // force cream track as soon as the button overlaps the forest surface.
+      const footer = document.querySelector<HTMLElement>('[data-site-footer]')
+      const overFooter = footer
+        ? footer.getBoundingClientRect().top < button.getBoundingClientRect().bottom
+        : false
+
+      if (overFooter !== onFooterRef.current) {
+        onFooterRef.current = overFooter
+        if (overFooter) {
+          button.setAttribute('data-on-footer', '')
+        } else {
+          button.removeAttribute('data-on-footer')
+        }
+      }
 
       const shouldShow = scroll > SHOW_THRESHOLD
       if (shouldShow === visibleRef.current) return

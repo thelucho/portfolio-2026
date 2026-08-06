@@ -1,18 +1,18 @@
+import InternalPage from '@/components/InternalPage'
+
 export default function Works() {
   return (
-    <main className="site-container flex flex-1 flex-col gap-6 py-16">
-      <h1 className="text-4xl font-semibold tracking-tight">Works</h1>
-      <p className="text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod
-        tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
-        veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
-        commodo consequat.
-      </p>
-      <p className="text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-        Duis aute irure dolor in reprehenderit in voluptate velit esse cillum
-        dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
-        proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-      </p>
+    <main className="flex flex-1 flex-col overflow-x-clip">
+      <InternalPage
+        title="Works"
+        eyebrow="Selected projects"
+        description="A growing archive of tailor-made digital experiences."
+      >
+        <p className="max-w-[42ch] font-sans text-base font-light leading-8 tracking-wide text-[#2B4625]/90 md:text-lg">
+          Project listings will live here. For now, explore featured work from
+          the homepage.
+        </p>
+      </InternalPage>
     </main>
-  );
+  )
 }

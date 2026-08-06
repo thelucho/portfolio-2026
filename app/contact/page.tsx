@@ -1,18 +1,30 @@
+import InternalPage from '@/components/InternalPage'
+
 export default function Contact() {
   return (
-    <main className="site-container flex flex-1 flex-col gap-6 py-16">
-      <h1 className="text-4xl font-semibold tracking-tight">Contact</h1>
-      <p className="text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod
-        tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
-        veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
-        commodo consequat.
-      </p>
-      <p className="text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-        Duis aute irure dolor in reprehenderit in voluptate velit esse cillum
-        dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
-        proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-      </p>
+    <main className="flex flex-1 flex-col overflow-x-clip">
+      <InternalPage
+        title="Contact"
+        eyebrow="Let's talk"
+        description="Have a project in mind? I'd love to hear about it."
+      >
+        <div className="flex flex-col gap-6">
+          <p className="max-w-[42ch] font-sans text-base font-light leading-8 tracking-wide text-[#2B4625]/90 md:text-lg">
+            Reach out by email and we&apos;ll figure out the next step together.
+          </p>
+          <a
+            href="mailto:hello@thelucho.dev"
+            className="view-case-link inline-flex w-fit items-center gap-2.5 font-sans"
+          >
+            hello@thelucho.dev
+            <span aria-hidden className="view-case-arrow text-lg leading-none">
+              <span className="view-case-arrow-icon">↗</span>
+              <span className="view-case-arrow-icon">↗</span>
+            </span>
+            <span aria-hidden className="view-case-underline" />
+          </a>
+        </div>
+      </InternalPage>
     </main>
-  );
+  )
 }

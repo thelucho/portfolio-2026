@@ -24,6 +24,16 @@ const manrope = Manrope({
 export const metadata: Metadata = {
   title: "Thelucho | Creative Developer",
   description: "Thelucho is a creative developer with a passion for building web applications that are both functional and aesthetically pleasing.",
+  applicationName: "Thelucho",
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#2B4625" },
+    { media: "(prefers-color-scheme: dark)", color: "#2B4625" },
+  ],
+  appleWebApp: {
+    capable: true,
+    title: "Thelucho",
+    statusBarStyle: "black-translucent",
+  },
 };
 
 export default function RootLayout({

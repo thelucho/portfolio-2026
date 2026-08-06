@@ -104,6 +104,68 @@ html.lenis body {
 }
 
 /*
+ * Internal page shell — compact hero + cream body.
+ */
+.internal-page {
+  --page-hero-scale: min(1, 100dvh / 900px, 100vw / 1280px);
+  --page-hero-pt: clamp(7rem, calc(9rem * var(--page-hero-scale)), 10rem);
+  --page-hero-pb: clamp(2.75rem, calc(4rem * var(--page-hero-scale)), 4.5rem);
+  --page-hero-min-h: clamp(16rem, 38dvh, 24rem);
+  --page-hero-title-size: clamp(4.75rem, calc(140px * var(--page-hero-scale)), 9rem);
+  --page-hero-title-tracking: calc(-3.5px * var(--page-hero-scale));
+  --page-hero-eyebrow-size: clamp(0.95rem, calc(18px * var(--page-hero-scale)), 1.25rem);
+  --page-hero-desc-size: clamp(0.95rem, 1.05vw + 0.7rem, 1.125rem);
+  --page-hero-bg-top: calc(-220px * var(--page-hero-scale));
+  --page-hero-bg-scale: calc(0.72 * var(--page-hero-scale));
+}
+
+/* Cream tone — shorter hero, sentence-case title a bit smaller */
+.internal-page[data-tone='cream'] {
+  --page-hero-min-h: clamp(11rem, 26dvh, 16rem);
+  --page-hero-pb: clamp(1.25rem, calc(2rem * var(--page-hero-scale)), 2.25rem);
+  --page-hero-title-size: clamp(3.25rem, calc(88px * var(--page-hero-scale)), 5.5rem);
+  --page-hero-title-tracking: calc(-1.5px * var(--page-hero-scale));
+}
+
+.page-hero {
+  min-height: var(--page-hero-min-h);
+}
+
+.internal-page__body {
+  border-top-left-radius: clamp(1.25rem, 2.5vw, 2rem);
+  border-top-right-radius: clamp(1.25rem, 2.5vw, 2rem);
+}
+
+/* Continuous cream surface — no seam between hero and body */
+.internal-page__body--flush {
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+/* About portrait — soft olive dot field behind one corner */
+.about-photo-dots {
+  background-image: radial-gradient(
+    circle,
+    rgb(146 156 59 / 0.55) 2.5px,
+    transparent 2.7px
+  );
+  background-size: 18px 18px;
+  background-position: top left;
+  -webkit-mask-image: linear-gradient(
+    135deg,
+    rgb(0 0 0 / 0.95) 0%,
+    rgb(0 0 0 / 0.55) 55%,
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    135deg,
+    rgb(0 0 0 / 0.95) 0%,
+    rgb(0 0 0 / 0.55) 55%,
+    transparent 100%
+  );
+}
+
+/*
  * Hero fluid scale — authored at ~1905×917 CSS px.
  * Below that height/width, the whole composition shrinks together so
  * title, masks, labels, and scroll cue keep their relative positions.
@@ -488,6 +550,17 @@ html[data-header-theme='light'] .scroll-to-top__progress {
 
 html[data-header-theme='ink'] .scroll-to-top__progress {
   color: var(--palette-sage);
+}
+
+/* Over forest footer — cream ring regardless of light header theme */
+.scroll-to-top[data-on-footer] .scroll-to-top__track,
+html[data-header-theme='light'] .scroll-to-top[data-on-footer] .scroll-to-top__track {
+  color: rgb(253 253 234 / 0.28);
+}
+
+.scroll-to-top[data-on-footer] .scroll-to-top__progress,
+html[data-header-theme='light'] .scroll-to-top[data-on-footer] .scroll-to-top__progress {
+  color: var(--palette-olive);
 }
 
 @media (prefers-reduced-motion: reduce) {
