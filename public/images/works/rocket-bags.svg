@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="560" viewBox="0 0 800 560" role="img" aria-label="Rocket Bags">
+  <rect width="800" height="560" fill="#2B4625"/>
+  <rect x="260" y="160" width="280" height="240" rx="40" fill="#929C3B" opacity="0.45"/>
+  <text x="400" y="300" text-anchor="middle" font-family="Georgia, serif" font-size="72" fill="#FDFDEA">RB</text>
+</svg>

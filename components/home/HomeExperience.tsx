@@ -249,7 +249,8 @@ export default function HomeExperience() {
           ref={creamRef}
           aria-hidden
           className="pointer-events-none absolute inset-0 z-20 will-change-[opacity]"
-          style={{ backgroundColor: '#FDFDEA' }}
+          // Hidden until GSAP owns opacity — avoids cream/Manifesto flash before the Intro covers the page.
+          style={{ backgroundColor: '#FDFDEA', opacity: 0 }}
         >
           <NoiseLayer />
         </div>
@@ -257,6 +258,7 @@ export default function HomeExperience() {
         <div
           ref={manifestoRef}
           className="absolute inset-0 z-30 flex items-center justify-center will-change-[opacity]"
+          style={{ opacity: 0, visibility: 'hidden' }}
         >
           <div
             ref={manifestoInnerRef}

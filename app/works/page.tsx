@@ -1,4 +1,5 @@
 import InternalPage from '@/components/InternalPage'
+import WorksMarqueeMenu from '@/components/works/WorksMarqueeMenu'
 
 export default function Works() {
   return (
@@ -7,11 +8,9 @@ export default function Works() {
         title="Works"
         eyebrow="Selected projects"
         description="A growing archive of tailor-made digital experiences."
+        fullBleed
       >
-        <p className="max-w-[42ch] font-sans text-base font-light leading-8 tracking-wide text-[#2B4625]/90 md:text-lg">
-          Project listings will live here. For now, explore featured work from
-          the homepage.
-        </p>
+        <WorksMarqueeMenu />
       </InternalPage>
     </main>
   )

@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="560" viewBox="0 0 800 560" role="img" aria-label="Legend of Learning">
+  <rect width="800" height="560" fill="#0D1104"/>
+  <circle cx="280" cy="280" r="90" fill="#A7B987" opacity="0.4"/>
+  <circle cx="520" cy="280" r="90" fill="#929C3B" opacity="0.35"/>
+  <text x="400" y="300" text-anchor="middle" font-family="Georgia, serif" font-size="64" fill="#FDFDEA">LoL</text>
+</svg>

@@ -14,6 +14,13 @@
   --container-px: 1.5rem;
 }
 
+/* Lock scroll while the Intro overlay is pending (SSR + first paint).
+   Keep scrollbar-gutter so the layout width matches the unlocked page. */
+html[data-intro-pending],
+html[data-intro-pending] body {
+  overflow: hidden;
+}
+
 html[data-header-theme='light'] {
   --header-fg: #2b4625;
   --header-rule: rgb(43 70 37 / 0.22);
@@ -77,6 +84,9 @@ body::before {
 
 html {
   overflow-x: clip;
+  /* Reserve classic scrollbar width so unlocking scroll after the Intro
+     does not shift fixed overlays or page content sideways. */
+  scrollbar-gutter: stable;
 }
 
 html.lenis,
@@ -540,11 +550,13 @@ html.lenis body {
   transform: translateY(-1px);
 }
 
-html[data-header-theme='light'] .scroll-to-top__track {
+html[data-header-theme='light'] .scroll-to-top__track,
+.scroll-to-top[data-on-cream] .scroll-to-top__track {
   color: rgb(43 70 37 / 0.2);
 }
 
-html[data-header-theme='light'] .scroll-to-top__progress {
+html[data-header-theme='light'] .scroll-to-top__progress,
+.scroll-to-top[data-on-cream] .scroll-to-top__progress {
   color: var(--palette-forest);
 }
 
@@ -552,14 +564,16 @@ html[data-header-theme='ink'] .scroll-to-top__progress {
   color: var(--palette-sage);
 }
 
-/* Over forest footer — cream ring regardless of light header theme */
+/* Over forest footer — cream ring regardless of light/cream surface */
 .scroll-to-top[data-on-footer] .scroll-to-top__track,
-html[data-header-theme='light'] .scroll-to-top[data-on-footer] .scroll-to-top__track {
+html[data-header-theme='light'] .scroll-to-top[data-on-footer] .scroll-to-top__track,
+.scroll-to-top[data-on-cream][data-on-footer] .scroll-to-top__track {
   color: rgb(253 253 234 / 0.28);
 }
 
 .scroll-to-top[data-on-footer] .scroll-to-top__progress,
-html[data-header-theme='light'] .scroll-to-top[data-on-footer] .scroll-to-top__progress {
+html[data-header-theme='light'] .scroll-to-top[data-on-footer] .scroll-to-top__progress,
+.scroll-to-top[data-on-cream][data-on-footer] .scroll-to-top__progress {
   color: var(--palette-olive);
 }
 
@@ -570,5 +584,208 @@ html[data-header-theme='light'] .scroll-to-top[data-on-footer] .scroll-to-top__p
 
   .scroll-to-top:hover .scroll-to-top__face {
     transform: none;
+  }
+}
+
+/* Works archive — Codrops-style direction-aware marquee menu */
+.works-marquee {
+  --works-border: rgb(43 70 37 / 0.22);
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: min(70dvh, 42rem);
+}
+
+.works-marquee__list {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.works-marquee__item {
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 -1px var(--works-border);
+}
+
+.works-marquee__item:last-child {
+  box-shadow:
+    0 1px var(--works-border),
+    0 -1px var(--works-border);
+}
+
+.works-marquee__link {
+  display: block;
+  position: relative;
+  z-index: 1;
+  padding-block: clamp(1.25rem, 3vh, 2.15rem);
+  text-decoration: none;
+  color: var(--palette-forest);
+  cursor: pointer;
+}
+
+.works-marquee__row {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr) auto;
+  align-items: center;
+  gap: clamp(0.75rem, 2vw, 1.75rem);
+}
+
+.works-marquee__brand {
+  justify-self: start;
+  text-align: left;
+  font-family: var(--font-averia-serif-libre), Georgia, serif;
+  font-size: clamp(1.55rem, 3.8vw, 3.75rem);
+  font-weight: 400;
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+
+.works-marquee__desc {
+  justify-self: start;
+  text-align: left;
+  white-space: nowrap;
+  font-family: var(--font-manrope), system-ui, sans-serif;
+  font-size: clamp(0.8rem, 1.05vw, 0.95rem);
+  font-weight: 300;
+  line-height: 1.45;
+  letter-spacing: 0.02em;
+  color: rgb(43 70 37 / 0.62);
+}
+
+.works-marquee__cta {
+  justify-self: end;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.55em 1.05em;
+  border: 1px solid rgb(43 70 37 / 0.35);
+  border-radius: 999px;
+  font-family: var(--font-manrope), system-ui, sans-serif;
+  font-size: clamp(0.65rem, 0.85vw, 0.72rem);
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--palette-forest);
+  transition:
+    border-color 0.35s ease,
+    background-color 0.35s ease,
+    color 0.35s ease;
+}
+
+.works-marquee__link:hover .works-marquee__cta,
+.works-marquee__link:focus-visible .works-marquee__cta {
+  border-color: var(--palette-forest);
+  background-color: rgb(43 70 37 / 0.06);
+}
+
+.works-marquee__link:focus-visible {
+  outline: 2px solid var(--palette-olive);
+  outline-offset: -2px;
+}
+
+.works-marquee__overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  overflow: hidden;
+  pointer-events: none;
+  will-change: transform;
+}
+
+.works-marquee__overlay-inner {
+  height: 100%;
+  width: 100%;
+  will-change: transform;
+}
+
+.works-marquee__track {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  width: max-content;
+  animation: works-marquee-scroll 18s linear infinite;
+  animation-play-state: paused;
+  will-change: transform;
+}
+
+.works-marquee__item:is(:hover, :focus-within) .works-marquee__track {
+  animation-play-state: running;
+}
+
+.works-marquee__label {
+  flex: none;
+  padding: 0 1.5vw;
+  font-family: var(--font-averia-serif-libre), Georgia, serif;
+  font-size: clamp(1.5rem, 4.5vw, 4.25rem);
+  font-weight: 400;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: var(--works-marquee-fg, #fdfdea);
+}
+
+.works-marquee__img {
+  flex: none;
+  width: clamp(7rem, 14vw, 13rem);
+  height: 68%;
+  margin: 0 1.5vw;
+  border-radius: clamp(1.5rem, 4vw, 3.5rem);
+  background-size: cover;
+  background-position: center;
+  background-color: rgb(253 253 234 / 0.12);
+}
+
+@keyframes works-marquee-scroll {
+  to {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+@media (max-width: 900px) {
+  .works-marquee__row {
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 0.85rem 1rem;
+  }
+
+  .works-marquee__brand {
+    grid-column: 1;
+    white-space: normal;
+    font-size: clamp(1.45rem, 6.5vw, 2.25rem);
+  }
+
+  .works-marquee__cta {
+    grid-column: 2;
+    grid-row: 1;
+  }
+
+  .works-marquee__desc {
+    grid-column: 1 / -1;
+    justify-self: start;
+    text-align: left;
+  }
+}
+
+@media (max-width: 640px) {
+  .works-marquee__desc {
+    display: none;
+  }
+
+  .works-marquee__img {
+    width: 5.5rem;
+    height: 58%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .works-marquee__track {
+    animation: none;
   }
 }

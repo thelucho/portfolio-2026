@@ -17,7 +17,11 @@ export default function Intro() {
     const [done, setDone] = useState(false)
 
     useLayoutEffect(() => {
-        document.body.style.overflow = 'hidden'
+        // Prefer the SSR `data-intro-pending` flag over inline overflow styles —
+        // mutating style on <html>/<body> before hydrate caused a mismatch warning.
+        const unlockScroll = () => {
+            document.documentElement.removeAttribute('data-intro-pending')
+        }
 
         const logoText = logoTextRef.current
         if (!logoText) return
@@ -88,7 +92,7 @@ export default function Intro() {
                 duration: 1,
                 ease: 'power2.inOut',
                 onStart: () => {
-                    document.body.style.overflow = ''
+                    unlockScroll()
                     signalIntroComplete()
                 },
             },
@@ -99,6 +103,7 @@ export default function Intro() {
             tl.kill()
             split.revert()
             split.kill()
+            unlockScroll()
         }
 
     }, [])
@@ -125,7 +130,13 @@ export default function Intro() {
             >
               Thelucho
             </span>
-            <span ref={subLogoTextRef} className="text-xs text-white tracking-[8px] uppercase inline-block opacity-100 will-change-[clip-path]">Creative Developer</span>
+            <span
+              ref={subLogoTextRef}
+              className="text-xs text-white tracking-[8px] uppercase inline-block opacity-100 will-change-[clip-path]"
+              style={{ clipPath: 'inset(0 100% 0 0)' }}
+            >
+              Creative Developer
+            </span>
             </div>
             
           </div>

@@ -1,7 +1,6 @@
 'use client'
 
 import { useRef } from 'react'
-import Link from 'next/link'
 import gsap from 'gsap'
 import { useGSAP } from '@gsap/react'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
@@ -31,14 +30,12 @@ const TRAIL_IMAGES = [
 export default function Statement() {
   const blockRef = useRef<HTMLElement>(null)
   const phraseRef = useRef<HTMLParagraphElement>(null)
-  const ctaRef = useRef<HTMLAnchorElement>(null)
   const trailRef = useRef<HTMLDivElement>(null)
 
   useGSAP(
     (_, contextSafe) => {
       const block = blockRef.current
       const phrase = phraseRef.current
-      const cta = ctaRef.current
       const trailRoot = trailRef.current
       if (!block || !phrase) return
 
@@ -48,12 +45,10 @@ export default function Statement() {
 
       mm.add('(prefers-reduced-motion: reduce)', () => {
         gsap.set(phrase, { autoAlpha: 1, color: CREAM })
-        if (cta) gsap.set(cta, { autoAlpha: 1 })
       })
 
       mm.add('(prefers-reduced-motion: no-preference)', () => {
         gsap.set(phrase, { autoAlpha: 0, color: FOREST })
-        if (cta) gsap.set(cta, { autoAlpha: 0 })
 
         let split: SplitText | undefined
         let revealTl: gsap.core.Timeline | undefined
@@ -79,18 +74,6 @@ export default function Statement() {
               },
               0.5,
             )
-
-            if (cta) {
-              revealTl.to(
-                cta,
-                {
-                  autoAlpha: 1,
-                  duration: 0.7,
-                  ease: 'power2.out',
-                },
-                '+=0.15',
-              )
-            }
 
             revealSt = ScrollTrigger.create({
               trigger: block,
@@ -183,20 +166,6 @@ export default function Statement() {
           <em className="font-normal italic text-olive">experiment</em> and push
           my limits.
         </p>
-
-        <Link
-          ref={ctaRef}
-          href="/labs"
-          data-statement-cta
-          className="view-case-link mt-16 inline-flex w-fit items-center gap-2.5 font-sans text-[#2B4625] sm:mt-20"
-        >
-          Explore Labs
-          <span aria-hidden className="view-case-arrow text-lg leading-none">
-            <span className="view-case-arrow-icon">↗</span>
-            <span className="view-case-arrow-icon">↗</span>
-          </span>
-          <span aria-hidden className="view-case-underline" />
-        </Link>
       </div>
     </aside>
   )

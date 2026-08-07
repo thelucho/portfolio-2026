@@ -20,6 +20,7 @@ export default function ScrollToTop() {
   const progressRef = useRef<SVGCircleElement>(null)
   const visibleRef = useRef(false)
   const onFooterRef = useRef(false)
+  const onCreamRef = useRef(false)
 
   useGSAP(
     () => {
@@ -34,7 +35,9 @@ export default function ScrollToTop() {
       })
       visibleRef.current = false
       onFooterRef.current = false
+      onCreamRef.current = false
       button.removeAttribute('data-on-footer')
+      button.removeAttribute('data-on-cream')
     },
     { dependencies: [pathname], revertOnUpdate: true },
   )
@@ -48,11 +51,13 @@ export default function ScrollToTop() {
       const ratio = Math.min(Math.max(progress, 0), 1)
       ring.style.strokeDashoffset = String(CIRCUMFERENCE * (1 - ratio))
 
+      const buttonRect = button.getBoundingClientRect()
+
       // Ring sits fixed over the footer long before header theme flips —
       // force cream track as soon as the button overlaps the forest surface.
       const footer = document.querySelector<HTMLElement>('[data-site-footer]')
       const overFooter = footer
-        ? footer.getBoundingClientRect().top < button.getBoundingClientRect().bottom
+        ? footer.getBoundingClientRect().top < buttonRect.bottom
         : false
 
       if (overFooter !== onFooterRef.current) {
@@ -61,6 +66,25 @@ export default function ScrollToTop() {
           button.setAttribute('data-on-footer', '')
         } else {
           button.removeAttribute('data-on-footer')
+        }
+      }
+
+      // Internal pages: cream body reaches the button before the header theme
+      // flips to light — use the gray track as soon as we overlap cream.
+      const creamBody = document.querySelector<HTMLElement>('.internal-page__body')
+      const creamRect = creamBody?.getBoundingClientRect()
+      const overCream = Boolean(
+        creamRect &&
+          creamRect.top < buttonRect.bottom &&
+          creamRect.bottom > buttonRect.top,
+      )
+
+      if (overCream !== onCreamRef.current) {
+        onCreamRef.current = overCream
+        if (overCream) {
+          button.setAttribute('data-on-cream', '')
+        } else {
+          button.removeAttribute('data-on-cream')
         }
       }
 

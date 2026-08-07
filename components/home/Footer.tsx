@@ -90,12 +90,22 @@ export default function Footer() {
             <ul className="flex flex-wrap items-center gap-x-5 gap-y-2 lg:justify-end">
               {NAV_ITEMS.map((item) => (
                 <li key={item.href}>
-                  <Link
-                    href={item.href}
-                    className="font-sans text-sm font-light tracking-wide text-[#FDFDEA]/90 transition-opacity hover:opacity-70 md:text-base"
-                  >
-                    {item.label}
-                  </Link>
+                  {item.soon ? (
+                    <span
+                      data-cursor="soon"
+                      aria-disabled="true"
+                      className="font-sans text-sm font-light tracking-wide text-[#FDFDEA]/90 transition-opacity hover:opacity-70 md:text-base"
+                    >
+                      {item.label}
+                    </span>
+                  ) : (
+                    <Link
+                      href={item.href}
+                      className="font-sans text-sm font-light tracking-wide text-[#FDFDEA]/90 transition-opacity hover:opacity-70 md:text-base"
+                    >
+                      {item.label}
+                    </Link>
+                  )}
                 </li>
               ))}
             </ul>

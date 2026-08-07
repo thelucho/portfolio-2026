@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="560" viewBox="0 0 800 560" role="img" aria-label="Rocket Badge">
+  <rect width="800" height="560" fill="#5C6B3A"/>
+  <polygon points="400,120 520,400 280,400" fill="#FDFDEA" opacity="0.2"/>
+  <text x="400" y="300" text-anchor="middle" font-family="Georgia, serif" font-size="64" fill="#FDFDEA">R+</text>
+</svg>

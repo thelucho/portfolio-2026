@@ -1,13 +1,15 @@
 export type NavItem = {
   label: string
   href: string
+  /** When true, rendered as a non-navigable label with the "soon" cursor. */
+  soon?: boolean
 }
 
 export const NAV_ITEMS: NavItem[] = [
   { label: 'Home', href: '/' },
   { label: 'Works', href: '/works' },
   { label: 'About', href: '/about' },
-  { label: 'Labs', href: '/labs' },
+  { label: 'Labs', href: '/labs', soon: true },
   { label: 'Contact', href: '/contact' },
 ]
 

@@ -7,14 +7,16 @@ const HOVER_DURATION = 0.35
 const HOVER_EASE = 'power2.out'
 const INTERACTIVE_SELECTOR = 'a, button, [role="button"]'
 const VIEW_SELECTOR = '[data-cursor="view"]'
+const SOON_SELECTOR = '[data-cursor="soon"]'
 const STATEMENT_SELECTOR = '[data-statement]'
 
-type CursorMode = 'default' | 'interactive' | 'view' | 'statement'
+type CursorMode = 'default' | 'interactive' | 'view' | 'statement' | 'soon'
 
 export default function CustomCursor() {
   const cursorRef = useRef<HTMLDivElement>(null)
   const ringRef = useRef<HTMLDivElement>(null)
   const viewCircleRef = useRef<HTMLDivElement>(null)
+  const soonBadgeRef = useRef<HTMLDivElement>(null)
   const dotRef = useRef<HTMLDivElement>(null)
   const arrowRef = useRef<SVGSVGElement>(null)
   const expandRef = useRef<SVGSVGElement>(null)
@@ -23,10 +25,11 @@ export default function CustomCursor() {
     const cursor = cursorRef.current
     const ring = ringRef.current
     const viewCircle = viewCircleRef.current
+    const soonBadge = soonBadgeRef.current
     const dot = dotRef.current
     const arrow = arrowRef.current
     const expand = expandRef.current
-    if (!cursor || !ring || !viewCircle || !dot || !arrow || !expand) return
+    if (!cursor || !ring || !viewCircle || !soonBadge || !dot || !arrow || !expand) return
 
     const finePointer = window.matchMedia('(pointer: fine)')
     if (!finePointer.matches) return
@@ -42,6 +45,7 @@ export default function CustomCursor() {
     })
     gsap.set(ring, { scale: 0, opacity: 0 })
     gsap.set(viewCircle, { scale: 0, opacity: 0 })
+    gsap.set(soonBadge, { scale: 0, opacity: 0 })
     gsap.set(dot, { scale: 1, opacity: 1 })
     gsap.set(arrow, { scale: 0, opacity: 0 })
     gsap.set(expand, { scale: 0, opacity: 0 })
@@ -55,8 +59,9 @@ export default function CustomCursor() {
 
       const isView = next === 'view'
       const isStatement = next === 'statement'
+      const isSoon = next === 'soon'
       const isInteractive = next === 'interactive'
-      const hideDot = isView || isStatement
+      const hideDot = isView || isStatement || isSoon
 
       gsap.to(ring, {
         scale: isInteractive ? 1 : 0,
@@ -69,6 +74,14 @@ export default function CustomCursor() {
       gsap.to(viewCircle, {
         scale: isView ? 1 : 0,
         opacity: isView ? 1 : 0,
+        duration: HOVER_DURATION,
+        ease: HOVER_EASE,
+        overwrite: 'auto',
+      })
+
+      gsap.to(soonBadge, {
+        scale: isSoon ? 1 : 0,
+        opacity: isSoon ? 1 : 0,
         duration: HOVER_DURATION,
         ease: HOVER_EASE,
         overwrite: 'auto',
@@ -102,6 +115,7 @@ export default function CustomCursor() {
     const resolveMode = (target: EventTarget | null): CursorMode => {
       if (!(target instanceof Element)) return 'default'
       if (target.closest(VIEW_SELECTOR)) return 'view'
+      if (target.closest(SOON_SELECTOR)) return 'soon'
       if (target.closest(INTERACTIVE_SELECTOR)) return 'interactive'
       if (target.closest(STATEMENT_SELECTOR)) return 'statement'
       return 'default'
@@ -144,6 +158,14 @@ export default function CustomCursor() {
         className="absolute size-[56px] rounded-full border border-[rgba(171,195,55,0.69)]"
       />
       <div ref={viewCircleRef} className="absolute size-[77px] rounded-full bg-[#ABC337]" />
+      <div
+        ref={soonBadgeRef}
+        className="absolute flex items-center justify-center rounded-full bg-[#FDFDEA] px-3 py-1.5"
+      >
+        <span className="font-sans text-[10px] leading-none font-medium tracking-[0.14em] text-[#2B4625] uppercase">
+          Soon
+        </span>
+      </div>
       <div ref={dotRef} className="size-2.5 rounded-full bg-[#ABC337]" />
       <svg
         ref={arrowRef}

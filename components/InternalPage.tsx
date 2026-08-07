@@ -12,6 +12,8 @@ gsap.registerPlugin(ScrollTrigger, useGSAP)
 
 export type InternalPageProps = PageHeroProps & {
   children: ReactNode
+  /** Skip site-container so children can go full-bleed (e.g. Works marquee). */
+  fullBleed?: boolean
 }
 
 /**
@@ -27,6 +29,7 @@ export default function InternalPage({
   description,
   tone = 'forest',
   align = 'center',
+  fullBleed = false,
   children,
 }: InternalPageProps) {
   const rootRef = useRef<HTMLDivElement>(null)
@@ -98,8 +101,15 @@ export default function InternalPage({
         <NoiseLayer className="z-0" />
         <div
           className={[
-            'site-container relative z-10',
-            isCream ? 'pb-16 pt-10 md:pb-20 md:pt-12 lg:pb-24 lg:pt-14' : 'py-16 md:py-20 lg:py-24',
+            'relative z-10',
+            fullBleed
+              ? 'w-full pb-20 pt-6 md:pb-24 md:pt-8 lg:pb-28'
+              : [
+                  'site-container',
+                  isCream
+                    ? 'pb-16 pt-10 md:pb-20 md:pt-12 lg:pb-24 lg:pt-14'
+                    : 'py-16 md:py-20 lg:py-24',
+                ].join(' '),
           ].join(' ')}
         >
           {children}

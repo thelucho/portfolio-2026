@@ -30,7 +30,7 @@ export type PageHeroProps = {
 }
 
 /**
- * Compact page hero for internal routes (About, Works, Labs, Contact).
+ * Compact page hero for internal routes (About, Works, Contact).
  * Title entrance mirrors the homepage Hero word reveal (blur / scale / opacity).
  */
 export default function PageHero({
