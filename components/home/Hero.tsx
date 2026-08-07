@@ -6,7 +6,8 @@ import Link from 'next/link'
 import gsap from 'gsap'
 import { useGSAP } from '@gsap/react'
 import { CustomEase } from 'gsap/CustomEase'
-import { HERO_INTRO_DELAY, onIntroComplete } from '@/lib/intro'
+import { HERO_INTRO_DELAY } from '@/lib/intro'
+import { onPageEntranceReady } from '@/lib/page-transition'
 import NoiseLayer from '@/components/NoiseLayer'
 
 gsap.registerPlugin(CustomEase, useGSAP)
@@ -218,9 +219,9 @@ export default function Hero() {
         })
       })
 
-      const playIntro = contextSafe(() => {
+      const playIntro = contextSafe((source: 'intro' | 'transition' = 'intro') => {
         const tl = gsap.timeline({
-          delay: HERO_INTRO_DELAY,
+          delay: source === 'transition' ? 0.15 : HERO_INTRO_DELAY,
           onComplete: bindMaskHovers,
         })
 
@@ -318,7 +319,7 @@ export default function Hero() {
         )
       })
 
-      const unsubscribe = onIntroComplete(playIntro)
+      const unsubscribe = onPageEntranceReady(playIntro)
 
       return () => {
         unsubscribe()

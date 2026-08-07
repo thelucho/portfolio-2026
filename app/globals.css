@@ -21,6 +21,12 @@ html[data-intro-pending] body {
   overflow: hidden;
 }
 
+/* Lock scroll while the client page-transition curtain is covering. */
+html[data-page-transitioning],
+html[data-page-transitioning] body {
+  overflow: hidden;
+}
+
 html[data-header-theme='light'] {
   --header-fg: #2b4625;
   --header-rule: rgb(43 70 37 / 0.22);
@@ -490,6 +496,27 @@ html.lenis body {
   z-index: 5;
 }
 
+/* Statement — cursor hint micro-motion */
+@keyframes statement-hint-nudge {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(3px);
+  }
+}
+
+.statement-hint__mouse {
+  animation: statement-hint-nudge 1.6s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .statement-hint__mouse {
+    animation: none;
+  }
+}
+
 /* Statement motion trail — Codrops MotionTrailAnimations demo 2 */
 .statement-trail {
   --trail-img-width: 190px;
@@ -787,5 +814,147 @@ html[data-header-theme='light'] .scroll-to-top[data-on-footer] .scroll-to-top__p
 @media (prefers-reduced-motion: reduce) {
   .works-marquee__track {
     animation: none;
+  }
+}
+
+/* —— Contact form —— */
+.contact-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+}
+
+.contact-label {
+  display: flex;
+  align-items: baseline;
+  gap: 0.65rem;
+  font-family: var(--font-manrope), system-ui, sans-serif;
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgb(43 70 37 / 0.58);
+}
+
+.contact-optional {
+  font-size: 0.65rem;
+  font-weight: 400;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgb(43 70 37 / 0.38);
+}
+
+.contact-input {
+  width: 100%;
+  appearance: none;
+  border: none;
+  border-bottom: 1px solid rgb(43 70 37 / 0.22);
+  border-radius: 0;
+  background: transparent;
+  padding: 0.55rem 0 0.7rem;
+  font-family: var(--font-manrope), system-ui, sans-serif;
+  font-size: 1.0625rem;
+  font-weight: 300;
+  letter-spacing: 0.02em;
+  line-height: 1.45;
+  color: #2b4625;
+  outline: none;
+  transition: border-color 0.35s ease;
+}
+
+.contact-input::placeholder {
+  color: rgb(43 70 37 / 0.35);
+}
+
+.contact-input:hover:not(:disabled) {
+  border-bottom-color: rgb(43 70 37 / 0.4);
+}
+
+.contact-input:focus-visible {
+  border-bottom-color: #2b4625;
+}
+
+.contact-input:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.contact-textarea {
+  resize: vertical;
+  min-height: 8.5rem;
+  padding-top: 0.65rem;
+}
+
+.contact-honeypot {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.contact-submit {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 3rem;
+  padding: 0.85rem 1.6rem;
+  border: 1px solid #2b4625;
+  background: #2b4625;
+  color: #fdfdea;
+  font-family: var(--font-manrope), system-ui, sans-serif;
+  font-size: 0.8rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition:
+    background-color 0.35s ease,
+    color 0.35s ease,
+    opacity 0.35s ease;
+}
+
+.contact-submit:hover:not(:disabled) {
+  background: transparent;
+  color: #2b4625;
+}
+
+.contact-submit:focus-visible {
+  outline: 2px solid #929c3b;
+  outline-offset: 3px;
+}
+
+.contact-submit:disabled {
+  opacity: 0.55;
+  cursor: wait;
+}
+
+.contact-form-reset {
+  font-size: 0.8rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #2b4625;
+  text-decoration: underline;
+  text-decoration-color: rgb(43 70 37 / 0.3);
+  text-underline-offset: 0.3em;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  transition: opacity 0.3s ease;
+}
+
+.contact-form-reset:hover {
+  opacity: 0.65;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .contact-input,
+  .contact-submit,
+  .contact-form-reset {
+    transition: none;
   }
 }

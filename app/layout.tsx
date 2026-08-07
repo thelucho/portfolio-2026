@@ -6,6 +6,7 @@ import "./globals.css";
 import CustomCursor from "@/components/CustomCursor";
 import Header from "@/components/Header";
 import IntroLoader from "@/components/IntroLoader";
+import PageTransition from "@/components/PageTransition";
 import ScrollToTop from "@/components/ScrollToTop";
 import SmoothScroll from "@/components/SmoothScroll";
 
@@ -57,6 +58,7 @@ export default function RootLayout({
         <SmoothScroll>
           <CustomCursor />
           <IntroLoader />
+          <PageTransition />
           <Header />
           <ScrollToTop />
           {children}

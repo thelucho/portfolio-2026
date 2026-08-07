@@ -6,11 +6,11 @@ import gsap from 'gsap'
 import { useGSAP } from '@gsap/react'
 import { SplitText } from 'gsap/SplitText'
 import NoiseLayer from '@/components/NoiseLayer'
-import { onIntroComplete } from '@/lib/intro'
 import {
   resetPageHeroEnter,
   signalPageHeroEnterComplete,
 } from '@/lib/page-hero'
+import { onPageEntranceReady } from '@/lib/page-transition'
 
 gsap.registerPlugin(useGSAP, SplitText)
 
@@ -88,9 +88,10 @@ export default function PageHero({
       if (eyebrowEl) gsap.set(eyebrowEl, { clipPath: 'inset(0 100% 0 0)' })
       if (descriptionEl) gsap.set(descriptionEl, { opacity: 0, y: 14 })
 
-      const play = () => {
-        // Shorter than the home Hero delay — internal pages should feel snappier.
-        const tl = gsap.timeline({ delay: 0.2 })
+      const play = (source: 'intro' | 'transition' = 'intro') => {
+        // After Intro: slight beat. After curtain reveal: almost immediate.
+        const delay = source === 'transition' ? 0.05 : 0.2
+        const tl = gsap.timeline({ delay })
 
         if (eyebrowEl) {
           tl.to(eyebrowEl, {
@@ -134,7 +135,7 @@ export default function PageHero({
         }
       }
 
-      const unsubscribe = onIntroComplete(play)
+      const unsubscribe = onPageEntranceReady(play)
 
       return () => {
         unsubscribe()

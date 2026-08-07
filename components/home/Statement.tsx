@@ -30,12 +30,14 @@ const TRAIL_IMAGES = [
 export default function Statement() {
   const blockRef = useRef<HTMLElement>(null)
   const phraseRef = useRef<HTMLParagraphElement>(null)
+  const hintRef = useRef<HTMLParagraphElement>(null)
   const trailRef = useRef<HTMLDivElement>(null)
 
   useGSAP(
     (_, contextSafe) => {
       const block = blockRef.current
       const phrase = phraseRef.current
+      const hint = hintRef.current
       const trailRoot = trailRef.current
       if (!block || !phrase) return
 
@@ -45,10 +47,12 @@ export default function Statement() {
 
       mm.add('(prefers-reduced-motion: reduce)', () => {
         gsap.set(phrase, { autoAlpha: 1, color: CREAM })
+        if (hint) gsap.set(hint, { autoAlpha: 0 })
       })
 
       mm.add('(prefers-reduced-motion: no-preference)', () => {
         gsap.set(phrase, { autoAlpha: 0, color: FOREST })
+        if (hint) gsap.set(hint, { autoAlpha: 0 })
 
         let split: SplitText | undefined
         let revealTl: gsap.core.Timeline | undefined
@@ -74,6 +78,17 @@ export default function Statement() {
               },
               0.5,
             )
+            if (hint) {
+              revealTl.to(
+                hint,
+                {
+                  autoAlpha: 0.55,
+                  duration: 0.6,
+                  ease: 'power2.out',
+                },
+                '-=0.2',
+              )
+            }
 
             revealSt = ScrollTrigger.create({
               trigger: block,
@@ -102,10 +117,33 @@ export default function Statement() {
           if (!trailRoot || !contextSafe) return
 
           const trail = new ImageTrail(trailRoot)
+          const HINT_DISMISS_DISTANCE = 100
+          let hintDismissed = false
+          let hintOrigin: { x: number; y: number } | null = null
 
           const onPointerMove = contextSafe((event: PointerEvent) => {
             const rect = block.getBoundingClientRect()
-            trail.setPointer(event.clientX - rect.left, event.clientY - rect.top)
+            const x = event.clientX - rect.left
+            const y = event.clientY - rect.top
+            trail.setPointer(x, y)
+
+            if (!hint || hintDismissed) return
+
+            if (!hintOrigin) {
+              hintOrigin = { x, y }
+              return
+            }
+
+            const traveled = Math.hypot(x - hintOrigin.x, y - hintOrigin.y)
+            if (traveled < HINT_DISMISS_DISTANCE) return
+
+            hintDismissed = true
+            gsap.to(hint, {
+              autoAlpha: 0,
+              y: 6,
+              duration: 0.45,
+              ease: 'power2.out',
+            })
           })
 
           const onPointerLeave = contextSafe(() => {
@@ -165,6 +203,43 @@ export default function Statement() {
           <em className="font-normal italic text-olive">learn</em>,{' '}
           <em className="font-normal italic text-olive">experiment</em> and push
           my limits.
+        </p>
+
+        <p
+          ref={hintRef}
+          data-statement-cta
+          className="pointer-events-none mt-10 hidden items-center gap-2.5 font-sans text-[0.7rem] font-medium tracking-[0.22em] text-[#2B4625] uppercase opacity-0 [@media(pointer:fine)]:flex"
+          aria-hidden
+        >
+          <svg
+            width="14"
+            height="20"
+            viewBox="0 0 14 20"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+            className="statement-hint__mouse shrink-0"
+          >
+            <rect
+              x="1"
+              y="1"
+              width="12"
+              height="18"
+              rx="6"
+              stroke="currentColor"
+              strokeWidth="1.25"
+            />
+            <line
+              x1="7"
+              y1="4.5"
+              x2="7"
+              y2="8"
+              stroke="currentColor"
+              strokeWidth="1.25"
+              strokeLinecap="round"
+              className="statement-hint__wheel"
+            />
+          </svg>
+          Move your cursor
         </p>
       </div>
     </aside>
