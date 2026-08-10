@@ -38,8 +38,9 @@ export default function InternalPage({
 
   useGSAP(
     () => {
+      const root = rootRef.current
       const body = bodyRef.current
-      if (!body) return
+      if (!body || !root) return
 
       const setHeaderTheme = (light: boolean) => {
         if (light) {
@@ -58,16 +59,30 @@ export default function InternalPage({
         }
       }
 
+      const footer = root.querySelector('footer')
+
+      // Keep the light header from the cream body through to the footer.
+      // endTrigger + ResizeObserver avoid mid-page flips when late-loading
+      // images grow the body after ScrollTrigger's first measurement.
       const trigger = ScrollTrigger.create({
         trigger: body,
         start: 'top 72px',
-        end: 'bottom 72px',
+        endTrigger: footer ?? body,
+        end: footer ? 'top 72px' : 'bottom 72px',
+        invalidateOnRefresh: true,
         onToggle: (self) => setHeaderTheme(self.isActive),
       })
 
       setHeaderTheme(trigger.isActive)
 
+      const resizeObserver = new ResizeObserver(() => {
+        ScrollTrigger.refresh()
+      })
+      resizeObserver.observe(body)
+      if (footer) resizeObserver.observe(footer)
+
       return () => {
+        resizeObserver.disconnect()
         trigger.kill()
         document.documentElement.removeAttribute('data-header-theme')
       }
