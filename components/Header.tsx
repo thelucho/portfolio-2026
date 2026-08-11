@@ -4,8 +4,9 @@ import { useRef } from 'react'
 import { useLenis } from 'lenis/react'
 
 import Logo from '@/components/header/Logo'
-import Navbar from '@/components/header/Navbar'
 import LocationClock from '@/components/header/LocationClock'
+import MobileMenu from '@/components/header/MobileMenu'
+import Navbar from '@/components/header/Navbar'
 
 const sideRuleClassName =
   'pointer-events-none absolute top-1/2 h-px w-[max(0px,calc((100%-min(100%,var(--container-max)))/2-20px))] -translate-y-1/2 bg-[var(--header-rule)] transition-[background-color] duration-500 ease-out'
@@ -41,11 +42,16 @@ export default function Header() {
           </div>
 
           <div className="justify-self-center">
-            <Navbar />
+            <div className="hidden md:block">
+              <Navbar />
+            </div>
           </div>
 
           <div className="justify-self-end">
-            <LocationClock />
+            <div className="hidden md:block">
+              <LocationClock />
+            </div>
+            <MobileMenu />
           </div>
         </div>
       </header>

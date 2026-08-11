@@ -110,9 +110,9 @@ export default function Statement() {
         }
       })
 
-      // Motion trail (Codrops demo 2) — desktop pointer only.
+      // Motion trail (Codrops demo 2) — desktop pointer only (not mobile).
       mm.add(
-        '(prefers-reduced-motion: no-preference) and (pointer: fine)',
+        '(prefers-reduced-motion: no-preference) and (pointer: fine) and (min-width: 768px)',
         () => {
           if (!trailRoot || !contextSafe) return
 
@@ -175,7 +175,7 @@ export default function Statement() {
       ref={blockRef}
       data-statement
       aria-label="Project philosophy"
-      className="relative z-0 flex min-h-[100dvh] items-center justify-center overflow-clip px-6 md:px-10"
+      className="relative z-0 flex min-h-[70dvh] items-center justify-center overflow-clip px-6 md:min-h-[100dvh] md:px-10"
     >
       <div
         ref={trailRef}

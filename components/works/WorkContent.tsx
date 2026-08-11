@@ -218,7 +218,7 @@ export default function WorkContent({ work }: WorkContentProps) {
                     {row.srcs.map((src) => (
                       <div
                         key={src}
-                        className="relative h-[400px] max-h-[400px] w-full overflow-hidden rounded-[12px] bg-[#2B4625]/8"
+                        className="relative aspect-square w-full overflow-hidden rounded-[12px] bg-[#2B4625]/8 md:aspect-auto md:h-[400px] md:max-h-[400px]"
                       >
                         <Image
                           src={src}

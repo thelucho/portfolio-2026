@@ -34,6 +34,7 @@ export default function Hero() {
   const titleRef = useRef<HTMLHeadingElement>(null)
   const creativeLabelRef = useRef<HTMLSpanElement>(null)
   const sinceLabelRef = useRef<HTMLSpanElement>(null)
+  const featureRef = useRef<HTMLAnchorElement>(null)
   const scrollLettersRef = useRef<SVGGElement>(null)
   const scrollArrowRef = useRef<SVGGElement>(null)
 
@@ -44,6 +45,7 @@ export default function Hero() {
       const title = titleRef.current
       const creativeLabel = creativeLabelRef.current
       const sinceLabel = sinceLabelRef.current
+      const feature = featureRef.current
       const scrollLetters = scrollLettersRef.current
       const scrollArrow = scrollArrowRef.current
       if (
@@ -62,6 +64,8 @@ export default function Hero() {
       const masks = title.querySelectorAll<HTMLElement>('[data-hero-mask]')
       const labels = [creativeLabel, sinceLabel]
       const letterPaths = scrollLetters.querySelectorAll('path')
+      const isMobileHero = () => window.matchMedia('(max-width: 899px)').matches
+      const mobileHero = isMobileHero()
 
       // Undo leftover inline styles from a previous effect pass (Strict Mode /
       // client nav) before measuring — otherwise offsetWidth is 0 and the
@@ -73,21 +77,24 @@ export default function Hero() {
 
       // Grow each mask from its center while the line's padding absorbs half
       // the expansion, so neighboring words shift left and right equally.
-      const reveals: MaskReveal[] = Array.from(masks).map((mask) => {
-        const line = mask.closest<HTMLElement>('[data-hero-line]')
-        if (!line) {
-          throw new Error('Hero mask is missing its data-hero-line parent')
-        }
+      // Mobile hides the masks so the copy stays continuous — skip measuring.
+      const reveals: MaskReveal[] = mobileHero
+        ? []
+        : Array.from(masks).map((mask) => {
+            const line = mask.closest<HTMLElement>('[data-hero-line]')
+            if (!line) {
+              throw new Error('Hero mask is missing its data-hero-line parent')
+            }
 
-        const styles = getComputedStyle(mask)
-        const width = mask.offsetWidth || parseFloat(styles.width) || 161
-        const marginLeft = parseFloat(styles.marginLeft) || 0
-        const marginRight = parseFloat(styles.marginRight) || 0
-        const paddingLeft = parseFloat(getComputedStyle(line).paddingLeft) || 0
-        const delta = width + marginLeft + marginRight
+            const styles = getComputedStyle(mask)
+            const width = mask.offsetWidth || parseFloat(styles.width) || 161
+            const marginLeft = parseFloat(styles.marginLeft) || 0
+            const marginRight = parseFloat(styles.marginRight) || 0
+            const paddingLeft = parseFloat(getComputedStyle(line).paddingLeft) || 0
+            const delta = width + marginLeft + marginRight
 
-        return { mask, line, width, marginLeft, marginRight, paddingLeft, delta }
-      })
+            return { mask, line, width, marginLeft, marginRight, paddingLeft, delta }
+          })
 
       gsap.set(words, {
         opacity: 0,
@@ -117,6 +124,14 @@ export default function Hero() {
       gsap.set(labels, {
         clipPath: 'inset(0 100% 0 0)',
       })
+
+      if (feature && mobileHero) {
+        gsap.set(feature, {
+          autoAlpha: 0,
+          scale: 0.88,
+          y: 12,
+        })
+      }
 
       gsap.set(letterPaths, {
         autoAlpha: 0,
@@ -152,7 +167,9 @@ export default function Hero() {
 
       const maskHoverCleanups: Array<() => void> = []
 
-      const bindMaskHovers = contextSafe(() => {
+      const revealMaskCtas = contextSafe(() => {
+        if (isMobileHero()) return
+
         masks.forEach((mask) => {
           const overlay = mask.querySelector<HTMLElement>('[data-hero-mask-overlay]')
           const label = mask.querySelector<HTMLElement>('[data-hero-mask-label]')
@@ -222,7 +239,7 @@ export default function Hero() {
       const playIntro = contextSafe((source: 'intro' | 'transition' = 'intro') => {
         const tl = gsap.timeline({
           delay: source === 'transition' ? 0.15 : HERO_INTRO_DELAY,
-          onComplete: bindMaskHovers,
+          onComplete: revealMaskCtas,
         })
 
         tl.to(words, {
@@ -295,6 +312,21 @@ export default function Hero() {
           '<0.4',
         )
 
+        if (feature && mobileHero) {
+          // Enter as "Since 2010" is finishing — not in parallel from the start.
+          tl.to(
+            feature,
+            {
+              autoAlpha: 1,
+              scale: 1,
+              y: 0,
+              duration: 0.9,
+              ease: 'power2.out',
+            },
+            '>-0.25',
+          )
+        }
+
         tl.to(
           letterPaths,
           {
@@ -344,7 +376,7 @@ export default function Hero() {
         height={1560}
         priority
         aria-hidden
-        className="pointer-events-none absolute top-[var(--hero-bg-top)] left-0 z-0 h-auto w-auto max-w-none origin-top-left scale-[var(--hero-scale)] select-none"
+        className="hero__bg pointer-events-none absolute top-[var(--hero-bg-top)] left-0 z-0 h-auto w-auto max-w-none origin-top-left scale-[var(--hero-scale)] select-none"
       />
       <div
         ref={spotlightRef}
@@ -352,28 +384,16 @@ export default function Hero() {
         className="pointer-events-none absolute top-0 left-0 z-[1] size-[var(--hero-spotlight-size)] rounded-full bg-[#5b7d54]/40 blur-[100px] will-change-transform"
       />
       <NoiseLayer className="z-[2]" />
-      <div className="relative z-10 w-[var(--hero-block-w)]">
-        <span
-          ref={creativeLabelRef}
-          className="pointer-events-none absolute top-[var(--hero-label-top)] right-[var(--hero-label-x)] font-serif text-[length:var(--hero-label-size)] font-light uppercase leading-[97%] text-[#ABC337] will-change-[clip-path]"
-        >
-          Creative Developer
-        </span>
-        <span
-          ref={sinceLabelRef}
-          className="pointer-events-none absolute bottom-[var(--hero-label-bottom)] left-[var(--hero-label-x)] font-serif text-[length:var(--hero-label-size)] font-light uppercase leading-[97%] text-[#ABC337] will-change-[clip-path]"
-        >
-          Since 2010
-        </span>
+      <div className="hero__block relative z-10 w-[var(--hero-block-w)]">
         <h1
           ref={titleRef}
-          className="font-serif text-[length:var(--hero-title-size)] font-normal uppercase leading-[91%] tracking-[var(--hero-title-tracking)] text-white"
+          className="hero__title font-serif text-[length:var(--hero-title-size)] font-normal uppercase leading-[91%] tracking-[var(--hero-title-tracking)] text-white"
         >
-          <span data-hero-line className="block pl-[var(--hero-line-1-pl)]">
+          <span data-hero-line className="hero__line--1 block pl-[var(--hero-line-1-pl)]">
             <span data-hero-el className="inline-block">
               I
             </span>{' '}
-            <span className="inline-block align-middle">
+            <span className="hero__mask-wrap inline-block align-middle">
               <Link
                 href="/about"
                 data-hero-mask
@@ -423,16 +443,16 @@ export default function Hero() {
                 </span>
               </Link>
             </span>
-            <span data-hero-el className="inline-block">
+            <span data-hero-el className="hero__word--dont inline-block">
               don&apos;t
             </span>
           </span>
 
-          <span data-hero-line className="block pl-[var(--hero-line-2-pl)]">
+          <span data-hero-line className="hero__line--2 block pl-[var(--hero-line-2-pl)]">
             <span data-hero-el className="inline-block">
               promise
             </span>{' '}
-            <span className="inline-block align-middle">
+            <span className="hero__mask-wrap inline-block align-middle">
               <Link
                 href="/works"
                 data-hero-mask
@@ -484,7 +504,7 @@ export default function Hero() {
             </span>
           </span>
 
-          <span className="block">
+          <span className="hero__line--3 block">
             <span data-hero-el className="inline-block">
               pixel
             </span>{' '}
@@ -493,7 +513,7 @@ export default function Hero() {
             </span>
           </span>
 
-          <span className="block pl-[var(--hero-line-4-pl)]">
+          <span data-hero-line className="hero__line--4 block pl-[var(--hero-line-4-pl)]">
             <span data-hero-el className="inline-block">
               I
             </span>{' '}
@@ -505,9 +525,40 @@ export default function Hero() {
             </span>
           </span>
         </h1>
+        <div className="hero__meta">
+          <span
+            ref={creativeLabelRef}
+            className="hero__label hero__label--creative pointer-events-none font-serif text-[length:var(--hero-label-size)] font-light uppercase leading-[97%] text-[#ABC337] will-change-[clip-path]"
+          >
+            Creative Developer
+          </span>
+          <span
+            ref={sinceLabelRef}
+            className="hero__label hero__label--since pointer-events-none font-serif text-[length:var(--hero-label-size)] font-light uppercase leading-[97%] text-[#ABC337] will-change-[clip-path]"
+          >
+            Since 2010
+          </span>
+        </div>
+        <div className="hero__feature">
+          <Link
+            ref={featureRef}
+            href="/about"
+            aria-label="About Me"
+            className="hero__feature-link"
+          >
+            <Image
+              src="/images/hero/hero-img-heading-01.jpg"
+              alt=""
+              width={161}
+              height={88}
+              aria-hidden
+              className="hero__feature-img"
+            />
+          </Link>
+        </div>
       </div>
 
-      <div className="pointer-events-none absolute bottom-[var(--hero-scroll-bottom)] left-1/2 z-10 origin-bottom -translate-x-1/2 scale-[var(--hero-scale)]">
+      <div className="hero__scroll pointer-events-none absolute bottom-[var(--hero-scroll-bottom)] left-1/2 z-10 origin-bottom -translate-x-1/2 scale-[var(--hero-scroll-scale)]">
         <svg
           width={181}
           height={95}

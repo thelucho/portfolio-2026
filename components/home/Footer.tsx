@@ -75,7 +75,10 @@ export default function Footer() {
       <div className="site-container relative z-10 flex flex-col pt-[var(--footer-pt)] pb-[var(--footer-pb)]">
         <div className="flex flex-col gap-[var(--footer-top-gap)] lg:flex-row lg:items-start lg:justify-between lg:gap-16">
           <div className="flex flex-col gap-4 md:gap-6">
-            <p className="max-w-[16ch] font-sans text-[length:var(--footer-cta-size)] font-semibold leading-[1.15] tracking-[-0.03em] text-[#FDFDEA]">
+            <p
+              data-footer-cta
+              className="max-w-[16ch] font-sans text-[length:var(--footer-cta-size)] font-semibold leading-[1.15] tracking-[-0.03em] text-[#FDFDEA]"
+            >
               Let’s connect and create something great together.
             </p>
             <a
@@ -113,7 +116,10 @@ export default function Footer() {
         </div>
 
         <div className="mt-[var(--footer-gap)] flex items-end gap-3 md:gap-5">
-          <p className="min-w-0 flex-1 font-serif text-[length:var(--footer-wordmark-size)] leading-[0.85] tracking-[-0.04em] text-[#FDFDEA]">
+          <p
+            data-footer-wordmark
+            className="min-w-0 flex-1 font-serif text-[length:var(--footer-wordmark-size)] leading-[0.85] tracking-[-0.04em] text-[#FDFDEA]"
+          >
             Thelucho
           </p>
           <AsteriskMark
@@ -124,7 +130,7 @@ export default function Footer() {
           />
         </div>
 
-        <div className="mt-[var(--footer-after-wordmark)] flex flex-col gap-4 border-t border-white/15 pt-5 sm:flex-row sm:items-center sm:justify-between sm:gap-8 md:pt-6">
+        <div className="mt-[var(--footer-after-wordmark)] flex flex-col-reverse gap-4 border-t border-white/15 pt-5 sm:flex-row sm:items-center sm:justify-between sm:gap-8 md:pt-6">
           <p className="font-sans text-xs font-light tracking-wide text-[#FDFDEA]/70 md:text-sm">
             © {YEAR} Thelucho — Creative Developer
           </p>

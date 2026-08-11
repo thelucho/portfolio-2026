@@ -67,7 +67,7 @@ function WorkRow({ work, reverse }: WorkRowProps) {
 
         <h3
           data-work-title
-          className="max-w-[16ch] font-serif text-[clamp(1.85rem,3.4vw,3.15rem)] leading-[1.12] tracking-[-0.03em] text-[#2B4625]"
+          className="w-full max-w-none font-serif text-[clamp(1.85rem,3.4vw,3.15rem)] leading-[1.12] tracking-[-0.03em] text-[#2B4625] md:max-w-[16ch]"
         >
           <Link href={workPath(work)} className="transition-opacity hover:opacity-70">
             {work.title}
@@ -679,7 +679,7 @@ const FeaturedWorks = forwardRef<HTMLElement>(function FeaturedWorks(_, ref) {
       <NoiseLayer className="z-0" />
       <div
         ref={marqueeRef}
-        className="relative z-10 mb-28 overflow-hidden md:mb-40 lg:mb-52"
+        className="relative z-10 mb-16 overflow-hidden md:mb-40 lg:mb-52"
         aria-hidden
       >
         <div
@@ -717,7 +717,7 @@ const FeaturedWorks = forwardRef<HTMLElement>(function FeaturedWorks(_, ref) {
       <div className="relative isolate mt-[100px]">
         <Statement />
         {/* Extra scroll room while Statement stays pinned before the footer reveal. */}
-        <div aria-hidden className="h-[70dvh] w-full" />
+        <div aria-hidden className="h-[40dvh] w-full md:h-[70dvh]" />
         <Footer />
       </div>
     </section>

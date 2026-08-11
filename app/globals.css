@@ -27,6 +27,92 @@ html[data-page-transitioning] body {
   overflow: hidden;
 }
 
+/* Lock scroll while the mobile nav overlay is open. */
+html[data-mobile-menu='open'],
+html[data-mobile-menu='open'] body {
+  overflow: hidden;
+}
+
+/* Keep logo + hamburger readable over the forest mobile menu panel. */
+html[data-mobile-menu='open'] {
+  --header-fg: #fdfdea;
+  --header-rule: rgb(253 253 234 / 0.2);
+}
+
+/* Mobile nav — two-line hamburger → X */
+.mobile-nav-toggle {
+  position: relative;
+  display: inline-flex;
+  width: 1.75rem;
+  height: 0.65rem;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transform: translateY(-5px);
+}
+
+/* Keep hamburger mobile-only — overrides display:inline-flex above md */
+@media (min-width: 768px) {
+  .mobile-nav-toggle {
+    display: none;
+  }
+}
+
+.mobile-nav-toggle__line {
+  position: absolute;
+  right: 0;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--header-fg);
+  transition:
+    width 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+    top 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+    bottom 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+    background-color 0.5s ease;
+}
+
+.mobile-nav-toggle__line--long {
+  top: 0;
+  width: 1.75rem;
+}
+
+.mobile-nav-toggle__line--short {
+  bottom: 0;
+  width: 1.15rem;
+}
+
+.mobile-nav-toggle:hover .mobile-nav-toggle__line--short,
+.mobile-nav-toggle:focus-visible .mobile-nav-toggle__line--short {
+  width: 1.75rem;
+}
+
+.mobile-nav-toggle[aria-expanded='true'] .mobile-nav-toggle__line--long {
+  top: 50%;
+  width: 1.75rem;
+  transform: translateY(-50%) rotate(45deg);
+}
+
+.mobile-nav-toggle[aria-expanded='true'] .mobile-nav-toggle__line--short {
+  top: 50%;
+  bottom: auto;
+  width: 1.75rem;
+  transform: translateY(-50%) rotate(-45deg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mobile-nav-toggle__line {
+    transition:
+      background-color 0.5s ease,
+      top 0.01ms,
+      bottom 0.01ms,
+      transform 0.01ms,
+      width 0.01ms;
+  }
+}
+
 html[data-header-theme='light'] {
   --header-fg: #2b4625;
   --header-rule: rgb(43 70 37 / 0.22);
@@ -73,6 +159,16 @@ body {
     background-color 0.55s ease,
     color 0.55s ease;
   overflow-x: clip;
+}
+
+::selection {
+  background: #abc337;
+  color: var(--palette-forest);
+}
+
+::-moz-selection {
+  background: #abc337;
+  color: var(--palette-forest);
 }
 
 /* Page-level noise sits on the background, under all content */
@@ -143,6 +239,19 @@ html.lenis body {
   --page-hero-title-tracking: calc(-1.5px * var(--page-hero-scale));
 }
 
+/* Mobile — smaller title so longer names (e.g. Rocket Bags) stay on one line */
+@media (max-width: 899px) {
+  .internal-page {
+    --page-hero-title-size: clamp(2.65rem, 11vw, 3.75rem);
+    --page-hero-title-tracking: -0.03em;
+  }
+
+  .internal-page[data-tone='cream'] {
+    --page-hero-title-size: clamp(2.15rem, 9vw, 3rem);
+    --page-hero-title-tracking: -0.02em;
+  }
+}
+
 .page-hero {
   min-height: var(--page-hero-min-h);
 }
@@ -210,6 +319,140 @@ html.lenis body {
   --hero-scroll-bottom: max(1rem, calc(2.5rem * var(--hero-scale)));
   --hero-bg-top: calc(-411px * var(--hero-scale));
   --hero-spotlight-size: calc(520px * var(--hero-scale));
+  --hero-block-px: 0px;
+  --hero-scroll-scale: var(--hero-scale);
+}
+
+.hero__block {
+  position: relative;
+}
+
+.hero__label--creative {
+  position: absolute;
+  top: var(--hero-label-top);
+  right: var(--hero-label-x);
+}
+
+.hero__label--since {
+  position: absolute;
+  bottom: var(--hero-label-bottom);
+  left: var(--hero-label-x);
+}
+
+/* Mobile-only featured image under the meta tags */
+.hero__feature {
+  display: none;
+}
+
+/*
+ * Mobile hero — continuous centered type; inline masks hidden.
+ * Meta stacked under the title, with one featured image below.
+ */
+@media (max-width: 899px) {
+  .hero {
+    --hero-scale: 1;
+    --hero-title-size: clamp(3.35rem, 14.5vw, 5.25rem);
+    --hero-title-tracking: -0.035em;
+    --hero-block-w: 100%;
+    --hero-block-px: 1.25rem;
+    --hero-label-size: clamp(0.8rem, 3.4vw, 1rem);
+    --hero-label-x: 0px;
+    --hero-label-top: 0px;
+    --hero-label-bottom: 0px;
+    --hero-line-1-pl: 0px;
+    --hero-line-2-pl: 0px;
+    --hero-line-4-pl: 0px;
+    --hero-feature-w: clamp(8.5rem, 48vw, 11.5rem);
+    --hero-feature-h: clamp(4.5rem, 25vw, 6rem);
+    --hero-scroll-bottom: max(1.1rem, env(safe-area-inset-bottom, 0px) + 0.85rem);
+    --hero-scroll-scale: 0.72;
+    --hero-bg-top: -8rem;
+    --hero-spotlight-size: min(70vw, 18rem);
+  }
+
+  .hero__block {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: min(78dvh, 42rem);
+    padding-inline: var(--hero-block-px);
+    padding-block: 5.25rem 7rem;
+    text-align: center;
+  }
+
+  .hero__title {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.06em;
+  }
+
+  .hero__line--1,
+  .hero__line--2,
+  .hero__line--3,
+  .hero__line--4 {
+    padding-left: 0;
+  }
+
+  /* Keep copy continuous — hide the inline image CTAs */
+  .hero__mask-wrap {
+    display: none;
+  }
+
+  .hero__meta {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.35em;
+    margin-top: 1.5rem;
+  }
+
+  .hero__label--creative,
+  .hero__label--since {
+    position: relative;
+    top: auto;
+    right: auto;
+    bottom: auto;
+    left: auto;
+    letter-spacing: 0.14em;
+  }
+
+  .hero__feature {
+    display: block;
+    margin-top: 1.35rem;
+  }
+
+  .hero__feature-link {
+    position: relative;
+    display: flex;
+    width: var(--hero-feature-w);
+    height: var(--hero-feature-h);
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    border-radius: 50px;
+  }
+
+  .hero__feature-img {
+    width: var(--hero-feature-w);
+    height: var(--hero-feature-h);
+    max-width: none;
+    flex-shrink: 0;
+    object-fit: cover;
+  }
+
+  .hero__scroll {
+    scale: var(--hero-scroll-scale);
+  }
+
+  .hero__bg {
+    left: 50% !important;
+    width: min(160vw, 56rem) !important;
+    max-width: none;
+    translate: -42% 0;
+    scale: 1 !important;
+  }
 }
 
 /*
@@ -239,6 +482,62 @@ html.lenis body {
   }
 }
 
+/* Desktop: stack is transparent so absolute children still position against .manifesto */
+.manifesto-stack {
+  display: contents;
+}
+
+/* Manifesto mobile — absolute tag + leaf, both viewport-centered */
+@media (max-width: 767px) {
+  .manifesto {
+    width: 100%;
+    max-width: none;
+    padding-inline: 0;
+    --manifesto-bg-size: 4.5rem;
+    --manifesto-bg-leading: 0.88;
+    --manifesto-bg-tracking: -0.04em;
+  }
+
+  .manifesto-stack {
+    display: block;
+    position: relative;
+    width: 100vw;
+    max-width: 100vw;
+    margin-left: calc(50% - 50vw);
+    margin-bottom: 3.25rem;
+    box-sizing: border-box;
+    /* leaf only — Creative Developer is hidden on mobile */
+    height: calc(53px + 80px);
+  }
+
+  .manifesto [data-manifesto-bg] {
+    display: none !important;
+  }
+
+  .manifesto [data-leaf='start'] {
+    position: absolute !important;
+    top: 53px !important;
+    right: auto !important;
+    bottom: auto !important;
+    left: 50% !important;
+    z-index: 1;
+    width: 80px;
+    margin: 0;
+    transform: translateX(-50%) !important;
+  }
+
+  .manifesto [data-leaf='end'] {
+    display: none;
+  }
+
+  .manifesto p[aria-label='Manifesto'] {
+    width: 100%;
+    padding-inline: 20px;
+    font-size: 2.5rem;
+    box-sizing: border-box;
+  }
+}
+
 /*
  * Site footer — fluid vertical rhythm so the block fits short laptop viewports
  * without shrinking the large-monitor composition (scale locks at 1 above ~900dvh).
@@ -263,6 +562,38 @@ html.lenis body {
     --footer-wordmark-size: clamp(3.5rem, min(18vw, 28dvh), 13.5rem);
     --footer-after-wordmark: 0.85rem;
     --footer-mark-size: clamp(2.5rem, calc(4.375rem * var(--footer-scale)), 4.375rem);
+  }
+}
+
+/* Footer + Statement mobile — denser layout; desktop composition unchanged */
+@media (max-width: 767px) {
+  .site-footer {
+    --footer-pt: 70px;
+    --footer-wordmark-size: clamp(2.5rem, 14vw, 4.5rem);
+    --footer-mark-size: clamp(1.75rem, 8vw, 2.5rem);
+  }
+
+  .site-footer nav[aria-label='Footer'] {
+    display: none;
+  }
+
+  .site-footer [data-footer-cta] {
+    max-width: unset;
+    margin-bottom: 12px;
+    font-size: 26px;
+  }
+
+  .site-footer [data-footer-wordmark] {
+    padding-bottom: 6px;
+  }
+
+  [data-statement-phrase] {
+    font-size: 2.25rem;
+  }
+
+  .statement-trail,
+  [data-statement-cta] {
+    display: none !important;
   }
 }
 
