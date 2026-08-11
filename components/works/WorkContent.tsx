@@ -150,13 +150,6 @@ export default function WorkContent({ work }: WorkContentProps) {
         </aside>
 
         <div className="flex flex-col gap-10 md:gap-12 lg:col-span-9 lg:gap-14">
-          <h2
-            data-work-reveal
-            className="max-w-[18ch] font-serif text-[clamp(1.85rem,3.6vw,2.75rem)] font-normal leading-[1.15] tracking-[-0.03em] text-[#2B4625]"
-          >
-            {work.title}
-          </h2>
-
           {heroSrc ? (
             <div
               data-work-reveal

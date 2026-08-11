@@ -20,5 +20,5 @@ export type SocialLink = {
 
 export const SOCIAL_LINKS: SocialLink[] = [
   { label: 'GitHub', href: 'https://github.com/thelucho' },
-  { label: 'LinkedIn', href: 'https://www.linkedin.com/in/thelucho' },
+  { label: 'LinkedIn', href: 'https://www.linkedin.com/in/luciano-dichiara/' },
 ]
