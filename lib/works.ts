@@ -159,7 +159,7 @@ export const WORKS: Work[] = [
     date: 'February 2025',
     stack: 'Wordpress / SASS',
     agency: 'Studio Hakuna',
-    linkLabel: 'rocketbags.co.uk',
+    linkLabel: 'https://www.rocketbags.co.uk/',
     href: '#',
     image: '/images/works/rocket-bags.svg',
     imageAlt: 'Custom-made bags catalog',
@@ -213,7 +213,7 @@ export const WORKS: Work[] = [
     href: 'https://www.legendsoflearning.com/',
     image: '/images/works/legend-of-learning.svg',
     imageAlt: 'Legend of Learning platform visual',
-    description: 'Game-based learning platform',
+    description: 'Legend of Learning: Game-based learning platform',
     about:
       'A game-based learning platform site that introduces educators to curriculum-aligned experiences and product pathways.',
     objective:
