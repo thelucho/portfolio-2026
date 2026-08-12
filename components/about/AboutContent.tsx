@@ -124,7 +124,7 @@ export default function AboutContent() {
             <div className="relative z-10 overflow-hidden rounded-[1.35rem] shadow-[0_18px_40px_rgb(43_70_37_/_0.12)]">
               <Image
                 src="/images/about/about-picture.jpg"
-                alt="Portrait of Lucho, creative developer"
+                alt="Luciano Dichiara (Thelucho), freelance creative developer in Buenos Aires"
                 width={372}
                 height={500}
                 priority
@@ -146,19 +146,19 @@ export default function AboutContent() {
                 data-about-reveal
                 className="max-w-[46ch] font-sans text-base font-light leading-8 tracking-wide text-[#2B4625]/88 md:text-[1.0625rem] md:leading-8"
               >
-                A creative developer crafting tailor-made web experiences where
-                motion, typography, and interaction earn their place. Since 2010
-                I&apos;ve been shaping interfaces that feel considered, alive, and
-                built to last.
+                A freelance creative developer in Argentina, crafting
+                tailor-made web experiences where motion, typography, and
+                interaction earn their place. Since 2010 I&apos;ve been shaping
+                interfaces that feel considered, alive, and built to last.
               </p>
               <p
                 data-about-reveal
                 className="max-w-[46ch] font-sans text-base font-light leading-8 tracking-wide text-[#2B4625]/88 md:text-[1.0625rem] md:leading-8"
               >
-                I work at the intersection of design and engineering — thoughtful
-                animation, clean systems, and details that make a product
-                memorable. If you have something in mind, I&apos;d love to hear
-                about it.
+                I work at the intersection of design and engineering — frontend
+                systems, GSAP motion, Next.js, and WordPress, with details that
+                make a product memorable. Currently independent, and open to
+                contractor roles part-time or full-time.
               </p>
             </div>
 

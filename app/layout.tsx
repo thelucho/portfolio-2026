@@ -6,9 +6,13 @@ import "./globals.css";
 import CustomCursor from "@/components/CustomCursor";
 import Header from "@/components/Header";
 import IntroLoader from "@/components/IntroLoader";
+import JsonLd from "@/components/JsonLd";
 import PageTransition from "@/components/PageTransition";
 import ScrollToTop from "@/components/ScrollToTop";
+import SkipToContent from "@/components/SkipToContent";
 import SmoothScroll from "@/components/SmoothScroll";
+import { siteGraphJsonLd } from "@/lib/seo";
+import { SITE, SITE_DESCRIPTION, SITE_KEYWORDS } from "@/lib/site";
 
 const averiaSerifLibre = Averia_Serif_Libre({
   variable: "--font-averia-serif-libre",
@@ -23,14 +27,50 @@ const manrope = Manrope({
 });
 
 export const metadata: Metadata = {
-  title: "Thelucho | Creative Developer",
-  description: "Thelucho is a creative developer with a passion for building web applications that are both functional and aesthetically pleasing.",
-  applicationName: "Thelucho",
+  metadataBase: new URL(SITE.url),
+  title: {
+    default: SITE.title,
+    template: `%s | ${SITE.shortName}`,
+  },
+  description: SITE_DESCRIPTION,
+  applicationName: SITE.name,
+  authors: [{ name: SITE.person.name, url: SITE.url }],
+  creator: SITE.person.name,
+  publisher: SITE.name,
+  keywords: [...SITE_KEYWORDS],
+  ...(process.env.GOOGLE_SITE_VERIFICATION
+    ? { verification: { google: process.env.GOOGLE_SITE_VERIFICATION } }
+    : {}),
+  openGraph: {
+    type: "website",
+    locale: SITE.locale,
+    url: "/",
+    siteName: SITE.name,
+    title: SITE.title,
+    description: SITE_DESCRIPTION,
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: SITE.title,
+    description: SITE_DESCRIPTION,
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+      "max-video-preview": -1,
+    },
+  },
   appleWebApp: {
     capable: true,
-    title: "Thelucho",
+    title: SITE.name,
     statusBarStyle: "black-translucent",
   },
+  category: "technology",
 };
 
 export const viewport: Viewport = {
@@ -52,6 +92,8 @@ export default function RootLayout({
       className={`${averiaSerifLibre.variable} ${manrope.variable} h-full antialiased`}
     >
       <body className="relative flex min-h-full flex-col overflow-x-clip font-sans">
+        <JsonLd data={siteGraphJsonLd()} />
+        <SkipToContent />
         <Script id="scroll-to-top-on-load" strategy="beforeInteractive">
           {`history.scrollRestoration="manual";window.scrollTo(0,0);`}
         </Script>

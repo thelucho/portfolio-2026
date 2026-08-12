@@ -2,10 +2,10 @@ import type { MetadataRoute } from 'next'
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: 'Thelucho | Creative Developer',
+    name: 'Thelucho | Freelance Creative Developer in Argentina',
     short_name: 'Thelucho',
     description:
-      'Thelucho is a creative developer with a passion for building web applications that are both functional and aesthetically pleasing.',
+      'Freelance creative developer in Buenos Aires — frontend, GSAP, Next.js, and WordPress. Open to contractor roles.',
     start_url: '/',
     display: 'standalone',
     background_color: '#2B4625',

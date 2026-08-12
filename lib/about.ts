@@ -27,6 +27,12 @@ export const ABOUT_STATS: AboutStat[] = [
 
 export const ABOUT_EXPERIENCE: ExperienceItem[] = [
   {
+    role: 'Freelance Creative Developer',
+    company: 'Independent',
+    period: '2026 — Present',
+    location: 'Argentina / Remote',
+  },
+  {
     role: 'Creative Developer',
     company: 'Studio Hakuna',
     period: '2018 — 2026',
@@ -36,7 +42,7 @@ export const ABOUT_EXPERIENCE: ExperienceItem[] = [
     role: 'Frontend Developer',
     company: 'Códigos Estudio',
     period: '2015 — 2018',
-    location: 'Argentina / Remote',
+    location: 'Argentina / In-house',
   },
   {
     role: 'Frontend Developer',

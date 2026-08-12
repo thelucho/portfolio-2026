@@ -79,6 +79,13 @@ export default function WorkContent({ work }: WorkContentProps) {
   const galleryRows = buildGalleryRows(restImages)
   const related = getNextWorks(work, 2)
 
+  const galleryAlt = (src: string) => {
+    const index = gallery.indexOf(src)
+    return index >= 0
+      ? `${work.brand} case study, image ${index + 1}`
+      : `${work.brand} case study`
+  }
+
   const meta = [
     { label: 'Date', value: work.date },
     { label: 'Stack', value: work.stack },
@@ -203,7 +210,7 @@ export default function WorkContent({ work }: WorkContentProps) {
                   >
                     <Image
                       src={row.src}
-                      alt=""
+                      alt={galleryAlt(row.src)}
                       fill
                       sizes="(max-width: 1024px) 100vw, 70vw"
                       className="object-cover"
@@ -222,7 +229,7 @@ export default function WorkContent({ work }: WorkContentProps) {
                       >
                         <Image
                           src={src}
-                          alt=""
+                          alt={galleryAlt(src)}
                           fill
                           sizes="(max-width: 1024px) 50vw, 35vw"
                           className="object-cover"
@@ -243,12 +250,12 @@ export default function WorkContent({ work }: WorkContentProps) {
           className="border-t border-[#2B4625]/12 pt-12 md:pt-16"
           aria-labelledby="work-related-heading"
         >
-          <h3
+          <h2
             id="work-related-heading"
             className="font-serif text-[clamp(1.65rem,3vw,2.25rem)] font-normal leading-[1.2] tracking-[-0.03em] text-[#2B4625]"
           >
             Check those also
-          </h3>
+          </h2>
 
           <ul className="mt-8 grid grid-cols-1 gap-10 sm:grid-cols-2 sm:gap-8 md:mt-10 lg:gap-12">
             {related.map((item) => {

@@ -141,7 +141,7 @@ export default function Footer() {
                 <a
                   href={item.href}
                   target="_blank"
-                  rel="noopener noreferrer"
+                  rel="me noopener noreferrer"
                   className="font-sans text-xs font-light tracking-wide text-[#FDFDEA] underline decoration-[#FDFDEA]/35 underline-offset-4 transition-opacity hover:opacity-70 md:text-sm"
                 >
                   {item.label}

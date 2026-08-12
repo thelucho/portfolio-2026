@@ -13,17 +13,17 @@ const AVAILABILITY = [
   {
     title: 'Projects & collaborations',
     detail:
-      'Landing pages, product UIs, and motion-led experiences built with care.',
+      'Next.js, WordPress, and GSAP-led experiences — landing pages, product UIs, and sites built with care.',
   },
   {
     title: 'Agencies welcome',
     detail:
-      "If you run an agency and need a reliable creative developer, let's talk.",
+      "If you run an agency and need a reliable freelance creative developer, let's talk.",
   },
   {
-    title: 'Remote · Part-time or full-time',
+    title: 'Contractor · Part-time or full-time',
     detail:
-      'Open to remote roles — flexible part-time engagements or full-time commitment.',
+      'Independent and based in Argentina — open to remote contractor roles, part-time or full-time.',
   },
 ] as const
 
@@ -122,7 +122,7 @@ export default function ContactContent() {
             className="max-w-[42ch] font-sans text-base font-light leading-8 tracking-wide text-[#2B4625]/88 md:text-[1.0625rem]"
           >
             Whether it&apos;s a new product, a redesign with motion at the
-            center, or a longer collaboration — share a few details and I&apos;ll
+            center, or a contractor role — share a few details and I&apos;ll
             follow up soon.
           </p>
         </div>
@@ -149,7 +149,7 @@ export default function ContactContent() {
               key={link.href}
               href={link.href}
               target="_blank"
-              rel="noopener noreferrer"
+              rel="me noopener noreferrer"
               className="view-case-link inline-flex w-fit items-center gap-2 font-sans"
             >
               {link.label}
