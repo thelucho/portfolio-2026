@@ -6,7 +6,7 @@ import gsap from 'gsap'
 import { useGSAP } from '@gsap/react'
 import { closestEdgeFromEvent } from '@/lib/closestEdge'
 import { onPageHeroEnterComplete } from '@/lib/page-hero'
-import { WORKS, workPath, type Work } from '@/lib/works'
+import { WORKS, workListBrand, workPath, type Work } from '@/lib/works'
 
 gsap.registerPlugin(useGSAP)
 
@@ -21,7 +21,7 @@ function marqueeAssets(work: Work): string[] {
 
 function MarqueeStrip({ work }: { work: Work }) {
   const images = marqueeAssets(work)
-  const labels = [work.brand, work.date, work.stack]
+  const labels = [workListBrand(work), work.date, work.stack]
 
   const units = labels.map((label, i) => ({
     label,
@@ -201,10 +201,10 @@ export default function WorksMarqueeMenu() {
                 data-works-link
                 data-cursor="view"
                 className="works-marquee__link"
-                aria-label={`View project: ${work.brand}`}
+                aria-label={`View project: ${workListBrand(work)}`}
               >
                 <span className="works-marquee__row site-container">
-                  <span className="works-marquee__brand">{work.brand}</span>
+                  <span className="works-marquee__brand">{workListBrand(work)}</span>
                   <span className="works-marquee__desc">
                     {work.description ?? ''}
                   </span>

@@ -1,6 +1,11 @@
 export type FeaturedWork = {
   id: string
   brand: string
+  /**
+   * Optional URL slug. Defaults to a slugified `brand`.
+   * Use when the public brand name should not drive the path (e.g. short archive label).
+   */
+  slug?: string
   /** Homepage headline (Featured Works). Not shown as the Works-page blurb. */
   title: string
   date: string
@@ -19,6 +24,11 @@ export type Work = FeaturedWork & {
    * Independent from `title`, which stays the homepage headline.
    */
   description?: string
+  /**
+   * Compact brand label for the Works archive row when the full `brand` is too long.
+   * Falls back to `brand` when omitted.
+   */
+  listBrand?: string
   /** One-paragraph overview of what the product / site is. */
   about: string
   /** One-paragraph note on the project goal. */
@@ -46,15 +56,33 @@ export function slugFromBrand(brand: string): string {
     .replace(/^-+|-+$/g, '')
 }
 
-export function workPath(work: FeaturedWork): string {
-  return `/works/${slugFromBrand(work.brand)}`
+export function workSlug(work: FeaturedWork): string {
+  return work.slug ?? slugFromBrand(work.brand)
 }
 
-export function workSlug(work: FeaturedWork): string {
-  return slugFromBrand(work.brand)
+export function workPath(work: FeaturedWork): string {
+  return `/works/${workSlug(work)}`
+}
+
+/** Brand shown in the Works archive list (may be shorter than `brand`). */
+export function workListBrand(work: Work): string {
+  return work.listBrand ?? work.brand
 }
 
 export const FEATURED_WORKS: FeaturedWork[] = [
+  {
+    id: 'legend-of-learning',
+    brand: 'Legends of Learning',
+    slug: 'lol',
+    title: 'Game-based learning platform',
+    date: 'November 2024',
+    stack: 'Wordpress / BEM',
+    agency: 'Studio Hakuna',
+    linkLabel: 'legendsoflearning.com',
+    href: 'https://www.legendsoflearning.com/',
+    image: '/images/works/lol.jpg',
+    imageAlt: 'Legend of Learning platform visual',
+  },
   {
     id: 'oneaxiom',
     brand: 'OneAxiom',
@@ -76,8 +104,8 @@ export const FEATURED_WORKS: FeaturedWork[] = [
     agency: 'Studio Hakuna',
     linkLabel: 'aimsinternational.com',
     href: 'https://aimsinternational.com',
-    image: '/images/works/aims.jpg',
-    imageAlt: 'Architectural spiral staircase with circular skylight',
+    image: '/images/works/aims-featured.jpg',
+    imageAlt: 'AIMS website mockup with leadership hero and floating UI cards',
   },
   {
     id: 'homee',
@@ -93,7 +121,7 @@ export const FEATURED_WORKS: FeaturedWork[] = [
   },
 ]
 
-const [oneAxiom, aims, homee] = FEATURED_WORKS
+const [lol, oneAxiom, aims, homee] = FEATURED_WORKS
 
 /** Four detail-page assets: `{id}-detail-01.jpg` … `-04.jpg`. */
 function detailImagesFor(id: string): string[] {
@@ -105,12 +133,29 @@ function detailImagesFor(id: string): string[] {
 /** Full Works archive — homepage featured set plus additional projects. */
 export const WORKS: Work[] = [
   {
+    ...lol,
+    listBrand: 'Legends',
+    description: 'Game-based learning platform',
+    about:
+      "Legends of Learning is an online educational platform that uses video games and interactive simulations to teach core school subjects — math, science, and history — to K-8 students. The scope of this project was the platform's marketing website, the main entry point where teachers and schools learn about the product and sign up.",
+    objective:
+      "A comprehensive redesign of the website was carried out, keeping the original branding intact. The project focused on restructuring the information architecture to improve navigability and overall user experience, along with organic SEO optimization to strengthen the site's visibility and discoverability.",
+    marqueeImages: [
+      '/images/works/lol-01.jpg',
+      '/images/works/lol-02.jpg',
+      '/images/works/lol-03.jpg',
+    ],
+    detailImages: detailImagesFor('lol'),
+    marqueeBg: '#0D1104',
+    marqueeFg: '#A7B987',
+  },
+  {
     ...oneAxiom,
     description: 'Enterprise cybersecurity platform',
     about:
-      'A marketing site for an enterprise cybersecurity company — clear product storytelling, structured services, and a CMS-driven content model.',
+      'OneAxiom is a cybersecurity company operating as a Managed Security Service Provider (MSSP). It offers an analytics-driven platform and end-to-end security solutions, including 24/7 threat monitoring, vulnerability management, and dedicated incident response teams.',
     objective:
-      'Present complex security offerings with clarity, and give the team a fast way to publish updates without sacrificing craft.',
+      'The website was built from the ground up on a modern, lightweight stack, with a custom UI design tailored to the brand. A key focus was making every piece of content easily manageable, giving the client full flexibility to update and maintain the site independently.',
     marqueeImages: [
       '/images/works/oneaxiom-01.jpg',
       '/images/works/oneaxiom-02.jpg',
@@ -124,9 +169,9 @@ export const WORKS: Work[] = [
     ...aims,
     description: 'Global executive leadership consultancy',
     about:
-      'A global consulting presence for executive search and leadership advisory — editorial layout, motion accents, and multi-market content.',
+      'AIMS International is a global leadership and human resources advisory firm, specializing in executive search, talent management, leadership development, and strategic consulting for companies across more than 90 countries.',
     objective:
-      'Elevate brand authority online and make expertise feel tangible across regions and practice areas.',
+      'The website was built on a modern, lightweight stack, with a custom UI design and fully manageable content architecture. A rigorous site-wide performance optimization strategy was also applied, aimed at improving Core Web Vitals metrics.',
     marqueeImages: [
       '/images/works/aims-01.jpg',
       '/images/works/aims-02.jpg',
@@ -140,9 +185,9 @@ export const WORKS: Work[] = [
     ...homee,
     description: 'AI-powered home repair platform',
     about:
-      'A consumer-facing platform that connects homeowners with repair services, guided by a calm visual system and fluid Webflow interactions.',
+      "HOMEE is an AI-powered technology platform that connects homeowners, insurers, and repair professionals to coordinate insurance claims and home maintenance across the United States — managing the full journey from initial claim to final repair, backed by a workmanship guarantee. The scope of this project was HOMEE's marketing website, used to present the service and drive sign-ups.",
     objective:
-      'Make booking feel simple and trustworthy — from first glance to the moment someone requests help.',
+      'A comprehensive redesign of the website was carried out, keeping it aligned with the original branding. A clean, well-structured UI was implemented with the goal of enhancing the user experience and driving higher conversion rates.',
     marqueeImages: [
       '/images/works/homee-01.jpg',
       '/images/works/homee-02.jpg',
@@ -201,31 +246,6 @@ export const WORKS: Work[] = [
     detailImages: detailImagesFor('rocket-badge'),
     marqueeBg: '#5C6B3A',
     marqueeFg: '#FDFDEA',
-  },
-  {
-    id: 'legend-of-learning',
-    brand: 'LOL',
-    title: 'Legends of Learning',
-    date: 'November 2024',
-    stack: 'Wordpress / BEM',
-    agency: 'Studio Hakuna',
-    linkLabel: 'legendsoflearning.com',
-    href: 'https://www.legendsoflearning.com/',
-    image: '/images/works/legend-of-learning.svg',
-    imageAlt: 'Legend of Learning platform visual',
-    description: 'Legend of Learning: Game-based learning platform',
-    about:
-      'A game-based learning platform site that introduces educators to curriculum-aligned experiences and product pathways.',
-    objective:
-      'Communicate learning impact clearly and guide teachers toward the right product entry points.',
-    marqueeImages: [
-      '/images/works/lol-01.jpg',
-      '/images/works/lol-02.jpg',
-      '/images/works/lol-03.jpg',
-    ],
-    detailImages: detailImagesFor('lol'),
-    marqueeBg: '#0D1104',
-    marqueeFg: '#A7B987',
   },
   {
     id: 'portfolio',

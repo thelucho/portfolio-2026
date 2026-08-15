@@ -35,7 +35,7 @@ export default async function WorkPage({ params }: WorkPageProps) {
     <main id="main" className="flex flex-1 flex-col overflow-x-clip">
       <JsonLd data={workJsonLd(work)} />
       <InternalPage
-        title={work.brand}
+        title={work.listBrand ?? work.brand}
         eyebrow={work.date}
         description={work.description ?? work.title}
       >
