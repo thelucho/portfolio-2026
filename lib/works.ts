@@ -210,9 +210,9 @@ export const WORKS: Work[] = [
     imageAlt: 'Custom-made bags catalog',
     description: 'Custom promotional bag manufacturer',
     about:
-      'A catalog-led WordPress site for a custom promotional bag manufacturer — product ranges, capabilities, and enquiry paths.',
+      'Rocket Bags is a UK-based company specializing in the manufacturing and supply of custom-branded bags, backpacks, and promotional accessories for corporate clients.',
     objective:
-      'Help buyers browse collections quickly and understand custom options without getting lost in SKUs.',
+      'A complete UX/UI redesign of the website was carried out, along with the implementation of a robust bulk product import system. Multiple performance and SEO optimizations were applied, complemented by A/B testing to validate design and conversion decisions.',
     marqueeImages: [
       '/images/works/rocket-bags-01.jpg',
       '/images/works/rocket-bags-02.jpg',
@@ -235,9 +235,9 @@ export const WORKS: Work[] = [
     imageAlt: 'Custom-made badges catalog',
     description: 'Charity fundraising merchandise supplier',
     about:
-      'A merchandise site for charity fundraising badges — product discovery, campaign storytelling, and straightforward ordering cues.',
+      'Rocket Badge is a British company specializing in the design and manufacturing of custom metal pins, badges, enamel insignias, and promotional keychains. With over 30 years of experience, it operates primarily in the UK market, serving corporate brands, charities, and events.',
     objective:
-      'Support fundraising partners with a clear shop experience that keeps the cause front and center.',
+      'A complete UX/UI redesign of the website was carried out, restructuring the information architecture for better navigability. The site was also optimized to improve Core Web Vitals performance and strengthen search engine positioning.',
     marqueeImages: [
       '/images/works/rocket-badge-01.jpg',
       '/images/works/rocket-badge-02.jpg',
@@ -260,9 +260,9 @@ export const WORKS: Work[] = [
     imageAlt: 'Portfolio website',
     description: 'Personal site focused on craft and motion',
     about:
-      'A personal portfolio focused on craft, motion, and selected work — built as a living showcase of process and taste.',
+      "A personal portfolio designed and built from the ground up as a space to showcase selected work. Rather than a simple project list, it's conceived as a living showcase — a reflection of process, taste, and the way I approach development.",
     objective:
-      'Present projects with intention, and leave a clear path for collaborations and conversations.',
+      'Present each project with intention, giving context and clarity to the work behind it. The site was also built to leave a clear, direct path for collaborations and conversations, making it easy for visitors and potential clients to get in touch.',
     marqueeImages: [
       '/images/works/portfolio-01.jpg',
       '/images/works/portfolio-02.jpg',
