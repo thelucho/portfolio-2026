@@ -127,7 +127,7 @@ export default function AboutContent() {
                 alt="Luciano Dichiara (Thelucho), freelance creative developer in Buenos Aires"
                 width={372}
                 height={500}
-                priority
+                sizes="(max-width: 768px) min(100vw, 280px), 372px"
                 className="aspect-[372/500] h-auto w-full object-cover"
               />
             </div>

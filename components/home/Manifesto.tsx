@@ -27,6 +27,7 @@ export default function Manifesto() {
           alt=""
           width={160}
           height={160}
+          sizes="(max-width: 767px) 80px, 112px"
           data-leaf="start"
           aria-hidden
           className="pointer-events-none absolute top-[var(--manifesto-leaf-start-top)] left-[var(--manifesto-leaf-start-left)] z-10 w-[var(--manifesto-leaf-w)] select-none will-change-[opacity]"
@@ -66,6 +67,7 @@ export default function Manifesto() {
         alt=""
         width={160}
         height={160}
+        sizes="(max-width: 767px) 1px, 112px"
         data-leaf="end"
         aria-hidden
         className="pointer-events-none absolute right-[var(--manifesto-leaf-end-right)] bottom-[var(--manifesto-leaf-end-bottom)] z-10 w-[var(--manifesto-leaf-w)] select-none will-change-[opacity]"

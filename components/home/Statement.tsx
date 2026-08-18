@@ -1,6 +1,6 @@
 'use client'
 
-import { useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import gsap from 'gsap'
 import { useGSAP } from '@gsap/react'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
@@ -32,13 +32,44 @@ export default function Statement() {
   const phraseRef = useRef<HTMLParagraphElement>(null)
   const hintRef = useRef<HTMLParagraphElement>(null)
   const trailRef = useRef<HTMLDivElement>(null)
+  const [trailReady, setTrailReady] = useState(false)
+
+  useEffect(() => {
+    const media = window.matchMedia(
+      '(prefers-reduced-motion: no-preference) and (pointer: fine) and (min-width: 768px)',
+    )
+    const root = blockRef.current
+    if (!media.matches || !root) return
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry?.isIntersecting) return
+        setTrailReady(true)
+        observer.disconnect()
+      },
+      { rootMargin: '320px 0px' },
+    )
+
+    observer.observe(root)
+    const onChange = () => {
+      if (!media.matches) {
+        setTrailReady(false)
+        observer.disconnect()
+      }
+    }
+    media.addEventListener('change', onChange)
+
+    return () => {
+      observer.disconnect()
+      media.removeEventListener('change', onChange)
+    }
+  }, [])
 
   useGSAP(
-    (_, contextSafe) => {
+    () => {
       const block = blockRef.current
       const phrase = phraseRef.current
       const hint = hintRef.current
-      const trailRoot = trailRef.current
       if (!block || !phrase) return
 
       const mm = gsap.matchMedia()
@@ -110,57 +141,6 @@ export default function Statement() {
         }
       })
 
-      // Motion trail (Codrops demo 2) — desktop pointer only (not mobile).
-      mm.add(
-        '(prefers-reduced-motion: no-preference) and (pointer: fine) and (min-width: 768px)',
-        () => {
-          if (!trailRoot || !contextSafe) return
-
-          const trail = new ImageTrail(trailRoot)
-          const HINT_DISMISS_DISTANCE = 100
-          let hintDismissed = false
-          let hintOrigin: { x: number; y: number } | null = null
-
-          const onPointerMove = contextSafe((event: PointerEvent) => {
-            const rect = block.getBoundingClientRect()
-            const x = event.clientX - rect.left
-            const y = event.clientY - rect.top
-            trail.setPointer(x, y)
-
-            if (!hint || hintDismissed) return
-
-            if (!hintOrigin) {
-              hintOrigin = { x, y }
-              return
-            }
-
-            const traveled = Math.hypot(x - hintOrigin.x, y - hintOrigin.y)
-            if (traveled < HINT_DISMISS_DISTANCE) return
-
-            hintDismissed = true
-            gsap.to(hint, {
-              autoAlpha: 0,
-              y: 6,
-              duration: 0.45,
-              ease: 'power2.out',
-            })
-          })
-
-          const onPointerLeave = contextSafe(() => {
-            trail.stop()
-          })
-
-          block.addEventListener('pointermove', onPointerMove)
-          block.addEventListener('pointerleave', onPointerLeave)
-
-          return () => {
-            block.removeEventListener('pointermove', onPointerMove)
-            block.removeEventListener('pointerleave', onPointerLeave)
-            trail.destroy()
-          }
-        },
-      )
-
       return () => {
         cancelAnimationFrame(raf1)
         cancelAnimationFrame(raf2)
@@ -168,6 +148,61 @@ export default function Statement() {
       }
     },
     { scope: blockRef },
+  )
+
+  useGSAP(
+    (_, contextSafe) => {
+      if (!trailReady || !contextSafe) return
+
+      const block = blockRef.current
+      const hint = hintRef.current
+      const trailRoot = trailRef.current
+      if (!block || !trailRoot) return
+
+      const trail = new ImageTrail(trailRoot)
+      const HINT_DISMISS_DISTANCE = 100
+      let hintDismissed = false
+      let hintOrigin: { x: number; y: number } | null = null
+
+      const onPointerMove = contextSafe((event: PointerEvent) => {
+        const rect = block.getBoundingClientRect()
+        const x = event.clientX - rect.left
+        const y = event.clientY - rect.top
+        trail.setPointer(x, y)
+
+        if (!hint || hintDismissed) return
+
+        if (!hintOrigin) {
+          hintOrigin = { x, y }
+          return
+        }
+
+        const traveled = Math.hypot(x - hintOrigin.x, y - hintOrigin.y)
+        if (traveled < HINT_DISMISS_DISTANCE) return
+
+        hintDismissed = true
+        gsap.to(hint, {
+          autoAlpha: 0,
+          y: 6,
+          duration: 0.45,
+          ease: 'power2.out',
+        })
+      })
+
+      const onPointerLeave = contextSafe(() => {
+        trail.stop()
+      })
+
+      block.addEventListener('pointermove', onPointerMove)
+      block.addEventListener('pointerleave', onPointerLeave)
+
+      return () => {
+        block.removeEventListener('pointermove', onPointerMove)
+        block.removeEventListener('pointerleave', onPointerLeave)
+        trail.destroy()
+      }
+    },
+    { scope: blockRef, dependencies: [trailReady] },
   )
 
   return (
@@ -182,15 +217,17 @@ export default function Statement() {
         className="statement-trail pointer-events-none absolute inset-0 z-0"
         aria-hidden
       >
-        {TRAIL_IMAGES.map((src) => (
-          <div key={src} data-trail-img className="statement-trail__img">
-            <div
-              data-trail-img-inner
-              className="statement-trail__img-inner"
-              style={{ backgroundImage: `url(${src})` }}
-            />
-          </div>
-        ))}
+        {trailReady
+          ? TRAIL_IMAGES.map((src) => (
+              <div key={src} data-trail-img className="statement-trail__img">
+                <div
+                  data-trail-img-inner
+                  className="statement-trail__img-inner"
+                  style={{ backgroundImage: `url(${src})` }}
+                />
+              </div>
+            ))
+          : null}
       </div>
 
       <div className="relative z-10 flex flex-col items-center">

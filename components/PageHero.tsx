@@ -163,11 +163,13 @@ export default function PageHero({
     >
       {!isCream ? (
         <Image
-          src="/images/hero/hero-background-shape.png"
+          src="/images/hero/hero-background-shape.webp"
           alt=""
           width={2200}
           height={1560}
           priority
+          fetchPriority="high"
+          sizes="(max-width: 899px) 100vw, 1600px"
           aria-hidden
           className="pointer-events-none absolute top-[var(--page-hero-bg-top)] left-0 z-0 h-auto w-auto max-w-none origin-top-left scale-[var(--page-hero-bg-scale)] select-none opacity-70"
         />

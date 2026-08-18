@@ -3,7 +3,7 @@ import { Averia_Serif_Libre, Manrope } from "next/font/google";
 import Script from "next/script";
 import "./globals.css";
 
-import CustomCursor from "@/components/CustomCursor";
+import CustomCursorGate from "@/components/CustomCursorGate";
 import Header from "@/components/Header";
 import IntroLoader from "@/components/IntroLoader";
 import JsonLd from "@/components/JsonLd";
@@ -19,11 +19,29 @@ const averiaSerifLibre = Averia_Serif_Libre({
   subsets: ["latin"],
   weight: ["300", "400", "700"],
   style: ["normal", "italic"],
+  display: "swap",
+  preload: true,
 });
 
 const manrope = Manrope({
   variable: "--font-manrope",
   subsets: ["latin"],
+  display: "swap",
+  preload: true,
+});
+
+const speculationRules = JSON.stringify({
+  prerender: [
+    {
+      where: {
+        and: [
+          { href_matches: "/*" },
+          { not: { href_matches: "/api/*" } },
+        ],
+      },
+      eagerness: "moderate",
+    },
+  ],
 });
 
 export const metadata: Metadata = {
@@ -97,8 +115,12 @@ export default function RootLayout({
         <Script id="scroll-to-top-on-load" strategy="beforeInteractive">
           {`history.scrollRestoration="manual";window.scrollTo(0,0);`}
         </Script>
+        <script
+          type="speculationrules"
+          dangerouslySetInnerHTML={{ __html: speculationRules }}
+        />
         <SmoothScroll>
-          <CustomCursor />
+          <CustomCursorGate />
           <IntroLoader />
           <PageTransition />
           <Header />

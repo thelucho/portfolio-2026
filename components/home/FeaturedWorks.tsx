@@ -419,6 +419,7 @@ const FeaturedWorks = forwardRef<HTMLElement>(function FeaturedWorks(_, ref) {
       const cleanups: Array<() => void> = []
       let raf1 = 0
       let raf2 = 0
+      let resizeTimer = 0
 
       mm.add('(prefers-reduced-motion: reduce)', () => {
         reducedMotion.current = true
@@ -638,7 +639,10 @@ const FeaturedWorks = forwardRef<HTMLElement>(function FeaturedWorks(_, ref) {
 
       const onResize = () => {
         measureChunk()
-        ScrollTrigger.refresh()
+        window.clearTimeout(resizeTimer)
+        resizeTimer = window.setTimeout(() => {
+          ScrollTrigger.refresh()
+        }, 180)
       }
 
       // Re-measure after webfonts settle so the loop width is accurate.
@@ -655,6 +659,7 @@ const FeaturedWorks = forwardRef<HTMLElement>(function FeaturedWorks(_, ref) {
       return () => {
         cancelAnimationFrame(raf1)
         cancelAnimationFrame(raf2)
+        window.clearTimeout(resizeTimer)
         window.removeEventListener('resize', onResize)
         cleanups.splice(0).forEach((fn) => fn())
         mm.revert()

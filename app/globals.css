@@ -290,6 +290,12 @@ html.lenis body {
   );
 }
 
+@media (pointer: coarse) {
+  .hero__spotlight {
+    display: none;
+  }
+}
+
 /*
  * Hero fluid scale — authored at ~1905×917 CSS px.
  * Below that height/width, the whole composition shrinks together so
@@ -825,6 +831,13 @@ html.lenis body {
   -webkit-mask-image: linear-gradient(to top, rgba(0, 0, 0, 0) 80%, rgba(0, 0, 0, 1) 100%);
   mask-image: linear-gradient(to top, rgba(0, 0, 0, 0) 80%, rgba(0, 0, 0, 1) 100%);
   z-index: 5;
+}
+
+/* Mobile — fewer stacked backdrop-filters; keeps the fade without 5 GPU layers */
+@media (max-width: 767px) {
+  .header-outer__gradient-blur-wrapper > div:nth-child(n + 3) {
+    display: none;
+  }
 }
 
 /* Statement — cursor hint micro-motion */

@@ -18,6 +18,8 @@ export default function ScrollToTop() {
   const pathname = usePathname()
   const buttonRef = useRef<HTMLButtonElement>(null)
   const progressRef = useRef<SVGCircleElement>(null)
+  const footerRef = useRef<HTMLElement | null>(null)
+  const creamRef = useRef<HTMLElement | null>(null)
   const visibleRef = useRef(false)
   const onFooterRef = useRef(false)
   const onCreamRef = useRef(false)
@@ -36,6 +38,8 @@ export default function ScrollToTop() {
       visibleRef.current = false
       onFooterRef.current = false
       onCreamRef.current = false
+      footerRef.current = document.querySelector<HTMLElement>('[data-site-footer]')
+      creamRef.current = document.querySelector<HTMLElement>('.internal-page__body')
       button.removeAttribute('data-on-footer')
       button.removeAttribute('data-on-cream')
     },
@@ -51,11 +55,23 @@ export default function ScrollToTop() {
       const ratio = Math.min(Math.max(progress, 0), 1)
       ring.style.strokeDashoffset = String(CIRCUMFERENCE * (1 - ratio))
 
-      const buttonRect = button.getBoundingClientRect()
+      const shouldShow = scroll > SHOW_THRESHOLD
+      if (shouldShow !== visibleRef.current) {
+        visibleRef.current = shouldShow
+        gsap.to(button, {
+          y: shouldShow ? 0 : 64,
+          opacity: shouldShow ? 1 : 0,
+          pointerEvents: shouldShow ? 'auto' : 'none',
+          duration: 0.5,
+          ease: shouldShow ? 'power3.out' : 'power2.in',
+          overwrite: 'auto',
+        })
+      }
 
-      // Ring sits fixed over the footer long before header theme flips —
-      // force cream track as soon as the button overlaps the forest surface.
-      const footer = document.querySelector<HTMLElement>('[data-site-footer]')
+      if (!visibleRef.current) return
+
+      const buttonRect = button.getBoundingClientRect()
+      const footer = footerRef.current
       const overFooter = footer
         ? footer.getBoundingClientRect().top < buttonRect.bottom
         : false
@@ -69,10 +85,7 @@ export default function ScrollToTop() {
         }
       }
 
-      // Internal pages: cream body reaches the button before the header theme
-      // flips to light — use the gray track as soon as we overlap cream.
-      const creamBody = document.querySelector<HTMLElement>('.internal-page__body')
-      const creamRect = creamBody?.getBoundingClientRect()
+      const creamRect = creamRef.current?.getBoundingClientRect()
       const overCream = Boolean(
         creamRect &&
           creamRect.top < buttonRect.bottom &&
@@ -87,19 +100,6 @@ export default function ScrollToTop() {
           button.removeAttribute('data-on-cream')
         }
       }
-
-      const shouldShow = scroll > SHOW_THRESHOLD
-      if (shouldShow === visibleRef.current) return
-      visibleRef.current = shouldShow
-
-      gsap.to(button, {
-        y: shouldShow ? 0 : 64,
-        opacity: shouldShow ? 1 : 0,
-        pointerEvents: shouldShow ? 'auto' : 'none',
-        duration: 0.5,
-        ease: shouldShow ? 'power3.out' : 'power2.in',
-        overwrite: 'auto',
-      })
     },
     [pathname],
   )

@@ -144,10 +144,16 @@ export default function Hero() {
         transformOrigin: '50% 0%',
       })
 
-      const xTo = gsap.quickTo(spotlight, 'x', { duration: 0.35, ease: 'power3' })
-      const yTo = gsap.quickTo(spotlight, 'y', { duration: 0.35, ease: 'power3' })
+      const finePointer = window.matchMedia('(pointer: fine)').matches
+      const xTo = finePointer
+        ? gsap.quickTo(spotlight, 'x', { duration: 0.35, ease: 'power3' })
+        : null
+      const yTo = finePointer
+        ? gsap.quickTo(spotlight, 'y', { duration: 0.35, ease: 'power3' })
+        : null
 
       const onPointerMove = (event: PointerEvent) => {
+        if (!xTo || !yTo) return
         const rect = section.getBoundingClientRect()
         xTo(event.clientX - rect.left)
         yTo(event.clientY - rect.top)
@@ -161,9 +167,11 @@ export default function Hero() {
         gsap.to(spotlight, { opacity: 0, duration: 0.4, ease: 'power2.out' })
       })
 
-      section.addEventListener('pointermove', onPointerMove)
-      section.addEventListener('pointerenter', onPointerEnter)
-      section.addEventListener('pointerleave', onPointerLeave)
+      if (finePointer) {
+        section.addEventListener('pointermove', onPointerMove)
+        section.addEventListener('pointerenter', onPointerEnter)
+        section.addEventListener('pointerleave', onPointerLeave)
+      }
 
       const maskHoverCleanups: Array<() => void> = []
 
@@ -356,9 +364,11 @@ export default function Hero() {
       return () => {
         unsubscribe()
         maskHoverCleanups.forEach((cleanup) => cleanup())
-        section.removeEventListener('pointermove', onPointerMove)
-        section.removeEventListener('pointerenter', onPointerEnter)
-        section.removeEventListener('pointerleave', onPointerLeave)
+        if (finePointer) {
+          section.removeEventListener('pointermove', onPointerMove)
+          section.removeEventListener('pointerenter', onPointerEnter)
+          section.removeEventListener('pointerleave', onPointerLeave)
+        }
       }
     },
     { scope: sectionRef },
@@ -370,18 +380,20 @@ export default function Hero() {
       className="hero relative flex h-full w-full items-center justify-center overflow-hidden"
     >
       <Image
-        src="/images/hero/hero-background-shape.png"
+        src="/images/hero/hero-background-shape.webp"
         alt=""
         width={2200}
         height={1560}
         priority
+        fetchPriority="high"
+        sizes="(max-width: 899px) 160vw, 2200px"
         aria-hidden
         className="hero__bg pointer-events-none absolute top-[var(--hero-bg-top)] left-0 z-0 h-auto w-auto max-w-none origin-top-left scale-[var(--hero-scale)] select-none"
       />
       <div
         ref={spotlightRef}
         aria-hidden
-        className="pointer-events-none absolute top-0 left-0 z-[1] size-[var(--hero-spotlight-size)] rounded-full bg-[#5b7d54]/40 blur-[100px] will-change-transform"
+        className="hero__spotlight pointer-events-none absolute top-0 left-0 z-[1] size-[var(--hero-spotlight-size)] rounded-full bg-[#5b7d54]/40 blur-[100px] will-change-transform"
       />
       <NoiseLayer className="z-[2]" />
       <div className="hero__block relative z-10 w-[var(--hero-block-w)]">
@@ -405,6 +417,7 @@ export default function Hero() {
                   alt=""
                   width={161}
                   height={88}
+                  sizes="(max-width: 899px) 1px, 161px"
                   aria-hidden
                   className="h-[var(--hero-mask-h)] w-[var(--hero-mask-w)] max-w-none shrink-0 object-cover"
                 />
@@ -464,6 +477,7 @@ export default function Hero() {
                   alt=""
                   width={161}
                   height={88}
+                  sizes="(max-width: 899px) 1px, 161px"
                   aria-hidden
                   className="h-[var(--hero-mask-h)] w-[var(--hero-mask-w)] max-w-none shrink-0 object-cover"
                 />
@@ -551,6 +565,7 @@ export default function Hero() {
               alt=""
               width={161}
               height={88}
+              sizes="(max-width: 899px) 48vw, 1px"
               aria-hidden
               className="hero__feature-img"
             />

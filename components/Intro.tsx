@@ -84,11 +84,10 @@ export default function Intro() {
             ease: 'power2.in',
         }, '<')
         .fromTo(panelRef.current,
-            { opacity: 1, filter: 'blur(0px)', backdropFilter: 'blur(0px)' },
+            { opacity: 1, scale: 1 },
             {
                 opacity: 0,
-                filter: 'blur(24px)',
-                backdropFilter: 'blur(24px)',
+                scale: 1.03,
                 duration: 1,
                 ease: 'power2.inOut',
                 onStart: () => {
@@ -114,7 +113,7 @@ export default function Intro() {
         <div ref={containerRef} className="fixed inset-0 z-[9999] pointer-events-none">
           <div
             ref={panelRef}
-            className="absolute inset-0 bg-[#2B4625] will-change-[opacity,filter]"
+            className="absolute inset-0 bg-[#2B4625] origin-center will-change-[opacity,transform]"
           >
             <NoiseLayer />
           </div>
