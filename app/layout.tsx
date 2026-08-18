@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Averia_Serif_Libre, Manrope } from "next/font/google";
+import { GoogleAnalytics } from "@next/third-parties/google";
 import Script from "next/script";
 import "./globals.css";
 
@@ -128,6 +129,9 @@ export default function RootLayout({
           {children}
         </SmoothScroll>
       </body>
+      {process.env.NODE_ENV === "production" ? (
+        <GoogleAnalytics gaId={SITE.analytics.gaId} />
+      ) : null}
     </html>
   );
 }

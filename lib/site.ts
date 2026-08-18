@@ -36,6 +36,9 @@ export const SITE = {
     github: 'https://github.com/thelucho',
     linkedin: 'https://www.linkedin.com/in/luciano-dichiara/',
   },
+  analytics: {
+    gaId: 'G-G53JGJSMQP',
+  },
 } as const
 
 export const SITE_KEYWORDS = [
