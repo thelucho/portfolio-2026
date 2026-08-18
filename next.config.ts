@@ -9,6 +9,21 @@ const nextConfig: NextConfig = {
   experimental: {
     optimizePackageImports: ["simple-icons"],
   },
+  async redirects() {
+    return [
+      // Legacy locale prefixes from the previous site. Remove these when i18n is added.
+      {
+        source: "/:locale(es|en)",
+        destination: "/",
+        statusCode: 301,
+      },
+      {
+        source: "/:locale(es|en)/:path+",
+        destination: "/:path+",
+        statusCode: 301,
+      },
+    ];
+  },
 };
 
 export default nextConfig;
