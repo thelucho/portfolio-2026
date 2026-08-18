@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import InternalPage from '@/components/InternalPage'
+import ViewCaseArrow from '@/components/ViewCaseArrow'
 
 export const metadata: Metadata = {
   title: 'Page not found',
@@ -23,10 +24,7 @@ export default function NotFound() {
           className="view-case-link inline-flex w-fit items-center gap-2.5 font-sans"
         >
           Back home
-          <span aria-hidden className="view-case-arrow text-lg leading-none">
-            <span className="view-case-arrow-icon">↗</span>
-            <span className="view-case-arrow-icon">↗</span>
-          </span>
+          <ViewCaseArrow />
           <span aria-hidden className="view-case-underline" />
         </Link>
       </InternalPage>

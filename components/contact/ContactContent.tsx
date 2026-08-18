@@ -6,6 +6,7 @@ import { useGSAP } from '@gsap/react'
 import { SOCIAL_LINKS } from '@/lib/navigation'
 import { onPageHeroEnterComplete } from '@/lib/page-hero'
 import ContactForm from '@/components/contact/ContactForm'
+import ViewCaseArrow from '@/components/ViewCaseArrow'
 
 gsap.registerPlugin(useGSAP)
 
@@ -153,10 +154,7 @@ export default function ContactContent() {
               className="view-case-link inline-flex w-fit items-center gap-2 font-sans"
             >
               {link.label}
-              <span aria-hidden className="view-case-arrow text-lg leading-none">
-                <span className="view-case-arrow-icon">↗</span>
-                <span className="view-case-arrow-icon">↗</span>
-              </span>
+              <ViewCaseArrow />
               <span aria-hidden className="view-case-underline" />
             </a>
           ))}

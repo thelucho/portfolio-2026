@@ -12,6 +12,7 @@ import { FEATURED_WORKS, workPath, type FeaturedWork } from '@/lib/works'
 import NoiseLayer from '@/components/NoiseLayer'
 import Footer from '@/components/home/Footer'
 import Statement from '@/components/home/Statement'
+import ViewCaseArrow from '@/components/ViewCaseArrow'
 
 gsap.registerPlugin(ScrollTrigger, SplitText, useGSAP)
 
@@ -113,10 +114,7 @@ function WorkRow({ work, reverse }: WorkRowProps) {
           className="view-case-link mt-8 inline-flex w-fit items-center gap-2.5 font-sans sm:mt-10"
         >
           View Case
-          <span aria-hidden className="view-case-arrow text-lg leading-none">
-            <span className="view-case-arrow-icon">↗</span>
-            <span className="view-case-arrow-icon">↗</span>
-          </span>
+          <ViewCaseArrow />
           <span aria-hidden className="view-case-underline" />
         </Link>
       </div>
@@ -718,10 +716,7 @@ const FeaturedWorks = forwardRef<HTMLElement>(function FeaturedWorks(_, ref) {
           className="view-case-link all-works-link inline-flex w-fit items-center gap-2.5 font-sans"
         >
           Explore All Works
-          <span aria-hidden className="view-case-arrow text-lg leading-none">
-            <span className="view-case-arrow-icon">↗</span>
-            <span className="view-case-arrow-icon">↗</span>
-          </span>
+          <ViewCaseArrow />
           <span aria-hidden className="view-case-underline" />
         </Link>
       </div>

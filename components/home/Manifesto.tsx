@@ -2,6 +2,7 @@
 
 import Image from 'next/image'
 import Link from 'next/link'
+import ViewCaseArrow from '@/components/ViewCaseArrow'
 
 const PHRASE =
   "I craft tailor-made web experiences where every detail earns its place — thoughtful motion, lasting craft, and interfaces that feel alive."
@@ -55,10 +56,7 @@ export default function Manifesto() {
         className="view-case-link relative z-10 mt-8 inline-flex w-fit items-center gap-2.5 font-sans sm:mt-10"
       >
         About me
-        <span aria-hidden className="view-case-arrow text-lg leading-none">
-          <span className="view-case-arrow-icon">↗</span>
-          <span className="view-case-arrow-icon">↗</span>
-        </span>
+        <ViewCaseArrow />
         <span aria-hidden className="view-case-underline" />
       </Link>
 

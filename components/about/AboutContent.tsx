@@ -14,6 +14,7 @@ import {
 } from '@/lib/about'
 import { onPageHeroEnterComplete } from '@/lib/page-hero'
 import TechIcon from '@/components/about/TechIcon'
+import ViewCaseArrow from '@/components/ViewCaseArrow'
 
 gsap.registerPlugin(ScrollTrigger, useGSAP)
 
@@ -184,10 +185,7 @@ export default function AboutContent() {
                 className="view-case-link inline-flex w-fit items-center gap-2.5 font-sans"
               >
                 Explore works
-                <span aria-hidden className="view-case-arrow text-lg leading-none">
-                  <span className="view-case-arrow-icon">↗</span>
-                  <span className="view-case-arrow-icon">↗</span>
-                </span>
+                <ViewCaseArrow />
                 <span aria-hidden className="view-case-underline" />
               </Link>
               <span
@@ -202,10 +200,7 @@ export default function AboutContent() {
                 className="view-case-link inline-flex w-fit items-center gap-2.5 font-sans"
               >
                 Get in touch
-                <span aria-hidden className="view-case-arrow text-lg leading-none">
-                  <span className="view-case-arrow-icon">↗</span>
-                  <span className="view-case-arrow-icon">↗</span>
-                </span>
+                <ViewCaseArrow />
                 <span aria-hidden className="view-case-underline" />
               </Link>
             </div>
