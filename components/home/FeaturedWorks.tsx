@@ -591,7 +591,7 @@ const FeaturedWorks = forwardRef<HTMLElement>(function FeaturedWorks(_, ref) {
                   end: 'bottom bottom',
                   pin: true,
                   pinSpacing: false,
-                  anticipatePin: 1,
+                  anticipatePin: ScrollTrigger.isTouch > 0 ? 0 : 1,
                   invalidateOnRefresh: true,
                 })
                 cleanups.push(() => pinSt.kill())
@@ -637,7 +637,14 @@ const FeaturedWorks = forwardRef<HTMLElement>(function FeaturedWorks(_, ref) {
         }
       })
 
+      let lastWidth = window.innerWidth
       const onResize = () => {
+        const width = window.innerWidth
+        const widthChanged = width !== lastWidth
+        lastWidth = width
+        // iOS URL-bar show/hide is a height-only resize. Refreshing pins
+        // here is what makes Hero / Manifesto / Statement copy bounce.
+        if (!widthChanged && ScrollTrigger.isTouch) return
         measureChunk()
         window.clearTimeout(resizeTimer)
         resizeTimer = window.setTimeout(() => {
@@ -679,7 +686,7 @@ const FeaturedWorks = forwardRef<HTMLElement>(function FeaturedWorks(_, ref) {
       ref={setSectionRef}
       id="featured-works"
       aria-label="Featured Works"
-      className="relative z-20 -mt-[20dvh] overflow-x-clip bg-[#FDFDEA] pt-10 text-[#2B4625] md:pt-14"
+      className="relative z-20 -mt-[20svh] overflow-x-clip bg-[#FDFDEA] pt-10 text-[#2B4625] md:pt-14"
     >
       <NoiseLayer className="z-0" />
       <div
@@ -722,7 +729,7 @@ const FeaturedWorks = forwardRef<HTMLElement>(function FeaturedWorks(_, ref) {
       <div className="relative isolate mt-[100px]">
         <Statement />
         {/* Extra scroll room while Statement stays pinned before the footer reveal. */}
-        <div aria-hidden className="h-[40dvh] w-full md:h-[70dvh]" />
+        <div aria-hidden className="h-[40svh] w-full md:h-[70svh]" />
         <Footer />
       </div>
     </section>

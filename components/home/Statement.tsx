@@ -210,7 +210,7 @@ export default function Statement() {
       ref={blockRef}
       data-statement
       aria-label="Project philosophy"
-      className="relative z-0 flex min-h-[70dvh] items-center justify-center overflow-clip px-6 md:min-h-[100dvh] md:px-10"
+      className="relative z-0 flex min-h-[70svh] items-center justify-center overflow-clip px-6 md:min-h-[100svh] md:px-10"
     >
       <div
         ref={trailRef}

@@ -71,6 +71,7 @@ export default function HomeExperience() {
         if (manifestoBg) gsap.set(manifestoBg, { opacity: 0 })
         if (manifestoCta) gsap.set(manifestoCta, { autoAlpha: 0, y: 16 })
 
+        const touchPin = ScrollTrigger.isTouch > 0
         const tl = gsap.timeline({
           scrollTrigger: {
             trigger: stage,
@@ -78,8 +79,10 @@ export default function HomeExperience() {
             // Shorter pin: ends once the manifesto is fully painted — no empty cream beat.
             end: '+=280%',
             pin: true,
-            scrub: 0.7,
-            anticipatePin: 1,
+            // Touch: 1:1 scrub so iOS momentum cannot reverse the playhead
+            // (lagged scrub reads as copy going up, then down, then fading).
+            scrub: touchPin ? true : 0.7,
+            anticipatePin: touchPin ? 0 : 1,
             invalidateOnRefresh: true,
             onUpdate: (self) => {
               setHeaderTheme(self.progress >= 0.38)
@@ -213,7 +216,7 @@ export default function HomeExperience() {
               trigger: works,
               start: 'top 95%',
               end: 'top 50%',
-              scrub: 0.4,
+              scrub: touchPin ? true : 0.4,
               invalidateOnRefresh: true,
             },
           },
@@ -233,7 +236,7 @@ export default function HomeExperience() {
 
   return (
     <div ref={rootRef} className="relative w-full overflow-x-clip">
-      <div ref={stageRef} className="relative z-10 h-dvh w-full overflow-hidden">
+      <div ref={stageRef} className="relative z-10 h-svh w-full overflow-hidden">
         <div
           aria-hidden
           className="absolute inset-0 bg-[radial-gradient(circle,_#516B4C_0%,_#2B4625_100%)]"

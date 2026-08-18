@@ -8,6 +8,10 @@ import type { LenisRef } from 'lenis/react'
 
 gsap.registerPlugin(ScrollTrigger)
 
+// iOS Chrome/Safari hide the URL bar on swipe, which fires a vertical-only
+// resize. Refreshing pins mid-gesture makes pinned copy jump up then snap back.
+ScrollTrigger.config({ ignoreMobileResize: true })
+
 type SmoothScrollProps = {
   children: React.ReactNode
 }
@@ -67,7 +71,8 @@ export default function SmoothScroll({ children }: SmoothScrollProps) {
         duration: 1.35,
         smoothWheel: true,
         wheelMultiplier: 0.9,
-        touchMultiplier: 1.1,
+        touchMultiplier: 1,
+        overscroll: false,
       }}
     >
       <LenisScrollTriggerSync />

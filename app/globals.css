@@ -159,6 +159,7 @@ body {
     background-color 0.55s ease,
     color 0.55s ease;
   overflow-x: clip;
+  overscroll-behavior-y: none;
 }
 
 ::selection {
@@ -189,6 +190,8 @@ html {
   /* Reserve classic scrollbar width so unlocking scroll after the Intro
      does not shift fixed overlays or page content sideways. */
   scrollbar-gutter: stable;
+  /* Stop iOS rubber-banding from fighting GSAP pins on swipe. */
+  overscroll-behavior-y: none;
 }
 
 html.lenis,
