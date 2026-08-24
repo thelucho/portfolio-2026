@@ -1,5 +1,5 @@
 /**
- * Canonical site identity — used by metadata, JSON-LD, sitemap, and OG images.
+ * Canonical site identity — used by metadata, JSON-LD, sitemap, and social cards.
  * Override the public URL with NEXT_PUBLIC_SITE_URL when deploying previews.
  * Default language is English; a Spanish locale can be added later.
  */
@@ -36,6 +36,8 @@ export const SITE = {
     github: 'https://github.com/thelucho',
     linkedin: 'https://www.linkedin.com/in/luciano-dichiara/',
   },
+  /** Shared Open Graph / Twitter card image (served from /public). */
+  ogImage: '/open-graph/open-graph.png',
   analytics: {
     gaId: 'G-G53JGJSMQP',
   },

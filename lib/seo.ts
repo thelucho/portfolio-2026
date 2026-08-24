@@ -38,6 +38,13 @@ export function workDateIso(date: string): string | undefined {
   return `${match[2]}-${month}`
 }
 
+const OG_IMAGE = {
+  url: SITE.ogImage,
+  width: 1200,
+  height: 630,
+  alt: SITE.title,
+} as const
+
 export function pageMetadata({
   title,
   description,
@@ -68,11 +75,13 @@ export function pageMetadata({
       type: 'website',
       locale: SITE.locale,
       siteName: SITE.name,
+      images: [OG_IMAGE],
     },
     twitter: {
       card: 'summary_large_image',
       title: openGraphTitle,
       description,
+      images: [SITE.ogImage],
     },
   }
 }
@@ -95,11 +104,13 @@ export function workPageMetadata(work: Work): Metadata {
       type: 'article',
       locale: SITE.locale,
       siteName: SITE.name,
+      images: [OG_IMAGE],
     },
     twitter: {
       card: 'summary_large_image',
       title: openGraphTitle,
       description,
+      images: [SITE.ogImage],
     },
   }
 }
