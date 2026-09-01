@@ -399,7 +399,7 @@ export default function Hero() {
       <div className="hero__block relative z-10 w-[var(--hero-block-w)]">
         <h1
           ref={titleRef}
-          className="hero__title font-serif text-[length:var(--hero-title-size)] font-normal uppercase leading-[91%] tracking-[var(--hero-title-tracking)] text-white"
+          className="hero__title font-serif text-[length:var(--hero-title-size)] font-normal uppercase leading-[0.91] tracking-[var(--hero-title-tracking)] text-white"
         >
           <span data-hero-line className="hero__line--1 block pl-[var(--hero-line-1-pl)]">
             <span data-hero-el className="inline-block">
@@ -542,13 +542,13 @@ export default function Hero() {
         <div className="hero__meta">
           <span
             ref={creativeLabelRef}
-            className="hero__label hero__label--creative pointer-events-none font-serif text-[length:var(--hero-label-size)] font-light uppercase leading-[97%] text-[#ABC337] will-change-[clip-path]"
+            className="hero__label hero__label--creative pointer-events-none font-serif text-[length:var(--hero-label-size)] font-light uppercase leading-[0.97] text-[#ABC337] will-change-[clip-path]"
           >
             Creative Developer
           </span>
           <span
             ref={sinceLabelRef}
-            className="hero__label hero__label--since pointer-events-none font-serif text-[length:var(--hero-label-size)] font-light uppercase leading-[97%] text-[#ABC337] will-change-[clip-path]"
+            className="hero__label hero__label--since pointer-events-none font-serif text-[length:var(--hero-label-size)] font-light uppercase leading-[0.97] text-[#ABC337] will-change-[clip-path]"
           >
             Since 2010
           </span>

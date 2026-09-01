@@ -222,7 +222,14 @@ html.lenis body {
  * Internal page shell — compact hero + cream body.
  */
 .internal-page {
-  --page-hero-scale: min(1, 100dvh / 900px, 100vw / 1280px);
+  /*
+   * Unitless scale capped at 1. Firefox still treats length/length division
+   * inside min() as invalid, so `min(1, 100dvh / 900px, …)` drops the custom
+   * property and every `calc(N * var(--*-scale))` collapses. tan(atan2(y, x))
+   * is the unitless ratio y/x and is valid in current engines.
+   */
+  --page-hero-scale: 1;
+  --page-hero-scale: tan(atan2(min(900px, 100dvh, calc(100vw * 900 / 1280)), 900px));
   --page-hero-pt: clamp(7rem, calc(9rem * var(--page-hero-scale)), 10rem);
   --page-hero-pb: clamp(2.75rem, calc(4rem * var(--page-hero-scale)), 4.5rem);
   --page-hero-min-h: clamp(16rem, 38dvh, 24rem);
@@ -308,8 +315,10 @@ html.lenis body {
   /*
    * Prefer height: short laptop viewports (and Windows display scaling) are the crunch.
    * Locked to the ~1905×917 authoring viewport — scale stays 1 there and shrinks below.
+   * Scale via tan(atan2()) — same Firefox-safe unitless ratio as --page-hero-scale.
    */
-  --hero-scale: min(1, 100dvh / 917px, 100vw / 1360px);
+  --hero-scale: 1;
+  --hero-scale: tan(atan2(min(917px, 100dvh, calc(100vw * 917 / 1360)), 917px));
   --hero-title-size: calc(130px * var(--hero-scale));
   --hero-title-tracking: calc(-3px * var(--hero-scale));
   --hero-block-w: calc(977px * var(--hero-scale));
@@ -469,7 +478,8 @@ html.lenis body {
  * Below ~Samsung width/height, pull leaves further out so they clear the phrase.
  */
 .manifesto {
-  --manifesto-scale: min(1, 100dvh / 917px, 100vw / 1360px);
+  --manifesto-scale: 1;
+  --manifesto-scale: tan(atan2(min(917px, 100dvh, calc(100vw * 917 / 1360)), 917px));
   --manifesto-bg-size: clamp(7rem, calc(320px * var(--manifesto-scale)), 320px);
   --manifesto-bg-leading: clamp(6.5rem, calc(300px * var(--manifesto-scale)), 300px);
   --manifesto-bg-tracking: calc(-20px * var(--manifesto-scale));
@@ -552,7 +562,8 @@ html.lenis body {
  * without shrinking the large-monitor composition (scale locks at 1 above ~900dvh).
  */
 .site-footer {
-  --footer-scale: min(1, 100dvh / 900px);
+  --footer-scale: 1;
+  --footer-scale: tan(atan2(min(900px, 100dvh), 900px));
   --footer-pt: clamp(2.5rem, calc(7rem * var(--footer-scale)), 7rem);
   --footer-pb: clamp(1.5rem, calc(3rem * var(--footer-scale)), 3rem);
   --footer-gap: clamp(1.75rem, calc(7rem * var(--footer-scale)), 7rem);
